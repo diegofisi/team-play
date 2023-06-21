@@ -1,38 +1,59 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:team_play/feature/auth/presentation/screens/auth_screen.dart';
 import 'package:team_play/feature/auth/presentation/screens/home_screen.dart';
 
-class AuthService{
+class AuthService {
   //sign in
-  signInWithGoogle() async{
-    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+  signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
-    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+      if (gUser == null) {
+        // El usuario canceló el proceso de inicio de sesión
+        return null;
+      }
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: gAuth.accessToken,
-      idToken: gAuth.idToken,
-    );
+      final GoogleSignInAuthentication gAuth = await gUser.authentication;
 
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+      final credential = GoogleAuthProvider.credential(
+        idToken: gAuth.idToken,
+        accessToken: gAuth.accessToken,
+      );
+
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    } on PlatformException catch (e) {
+      // Aquí puedes manejar la PlatformException específicamente
+      print('Caught a PlatformException: ${e.message}');
+      return null;
+    } catch (e) {
+      // Aquí puedes manejar todos los demás errores
+      print(e);
+      return null;
+    }
   }
 
-  signOut(){
-    FirebaseAuth.instance.signOut();
+  signOut() async {
+    await GoogleSignIn().disconnect();
+    await FirebaseAuth.instance.signOut();
   }
 
-  handleAuthState(){
+  handleAuthState() {
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (BuildContext context, AsyncSnapshot snapshot){
-        if(snapshot.hasData){
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
           return HomeScreen();
-        }else{
+        } else {
           return AuthScreen();
         }
       },
     );
+  }
+
+  getCredential() {
+    return FirebaseAuth.instance.currentUser!.getIdToken() ?? "no token";
   }
 }

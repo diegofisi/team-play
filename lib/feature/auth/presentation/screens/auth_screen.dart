@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:team_play/feature/auth/domain/repositories/auth_repository.dart';
 
 class AuthScreen extends StatelessWidget {
@@ -6,13 +7,19 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: TextButton(
-        onPressed: () {
-          AuthService().signInWithGoogle();
-        },
-        child: Text("ingresar"),
+    return Column(children: [
+      Container(
+        child: TextButton(
+          onPressed: () async {
+            try {
+              AuthService().signInWithGoogle();
+            } catch (e) {
+              return;
+            }
+          },
+          child: Text("ingresar"),
+        ),
       ),
-    );
+    ]);
   }
 }
