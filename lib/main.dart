@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:team_play/feature/auth/domain/repositories/auth_repository.dart';
+import 'package:team_play/config/theme/app_theme.dart';
+import 'package:team_play/feature/auth/domain/repositories/auth_repository_provisional.dart';
+import 'package:team_play/feature/auth/presentation/screens/login2.dart';
+import 'package:team_play/feature/auth/presentation/screens/token_print.dart';
 import 'package:team_play/firebase_options.dart';
 
 void main() async {
@@ -15,13 +18,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Material App',
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Material App Bar'),
-        ),
-        body: AuthService().handleAuthState(),
+        body: TokenPrint(),
       ),
+      theme: AppTheme().getTheme(),
     );
   }
 }
