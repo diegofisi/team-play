@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:team_play/feature/auth/domain/repositories/auth_repository_provisional.dart';
+import 'package:team_play/feature/auth/presentation/providers/firebase_provider.dart';
 
-class GoogleButtonLogin extends StatelessWidget {
-  final size;
+class GoogleButtonLogin extends ConsumerWidget {
   const GoogleButtonLogin({
-    super.key, required this.size,
+    super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ElevatedButton.icon(
       icon: Image.asset(
         'assets/logo/google_logo.png',
-        height: 20.0,
+        height: 30,
       ),
       label: const Text(
         'Sign in with Google',
       ),
       onPressed: () {
-        AuthService().signInWithGoogle();
+        ref.read(loginProvider);
       },
       style: ButtonStyle(
         padding: MaterialStateProperty.all(

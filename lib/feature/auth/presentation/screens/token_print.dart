@@ -1,14 +1,27 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:team_play/feature/auth/domain/repositories/auth_repository_provisional.dart';
-import 'package:team_play/feature/auth/infrastructure/datasources/auth_datasource_impl.dart';
+import 'package:team_play/feature/auth/infrastructure/datasources/dio_test.dart';
+import 'package:team_play/feature/auth/presentation/providers/firebase_provider.dart';
 
-class TokenPrint extends StatelessWidget {
+class TokenPrint extends ConsumerWidget {
   const TokenPrint({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(children: [
+      TextButton(
+        onPressed: () async {
+          final result = await ref.read(getTokenProvider);
+          result.fold(
+            (error) => print('Error: $error'),
+            (token) => print(token),
+          );
+          
+        },
+        child: Text("test"),
+      ),
       TextButton(
           onPressed: () {
             AuthService().signInWithGoogle();

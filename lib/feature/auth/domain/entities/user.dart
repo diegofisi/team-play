@@ -1,36 +1,37 @@
 import 'dart:convert';
 
-User userRequestFromJson(String str) => User.fromJson(json.decode(str));
+UserEntity userRequestFromJson(String str) =>
+    UserEntity.fromJson(json.decode(str));
 
-String userRequestToJson(User data) => json.encode(data.toJson());
+String userRequestToJson(UserEntity data) => json.encode(data.toJson());
 
-class User {
+class UserEntity {
   final String name;
   final String username;
   final String email;
   final String role;
   final int age;
   final String position;
-  final Location? location;
+  final LocationUser location;
 
-  User({
+  UserEntity({
     required this.name,
     required this.username,
     required this.email,
     required this.role,
     required this.age,
     required this.position,
-    this.location,
+    required this.location,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory UserEntity.fromJson(Map<String, dynamic> json) => UserEntity(
         name: json["name"],
         username: json["username"],
         email: json["email"],
         role: json["role"],
         age: json["age"],
         position: json["position"],
-        location: Location.fromJson(json["location"]),
+        location: LocationUser.fromJson(json["location"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -40,20 +41,20 @@ class User {
         "role": role,
         "age": age,
         "position": position,
-        "location": location?.toJson() ?? {},
+        "location": location.toJson(),
       };
 }
 
-class Location {
+class LocationUser {
   final double latitude;
   final double longitude;
 
-  Location({
+  LocationUser({
     required this.latitude,
     required this.longitude,
   });
 
-  factory Location.fromJson(Map<String, dynamic> json) => Location(
+  factory LocationUser.fromJson(Map<String, dynamic> json) => LocationUser(
         latitude: json["latitude"]?.toDouble(),
         longitude: json["longitude"]?.toDouble(),
       );

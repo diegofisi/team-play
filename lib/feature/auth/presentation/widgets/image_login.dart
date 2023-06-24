@@ -9,7 +9,6 @@ class ImageLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image.asset(
       'assets/logo/login_image.png',
-      height: 400,
       color: Colors.black.withOpacity(0.63),
     );
   }
