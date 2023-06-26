@@ -21,13 +21,15 @@ class LogoutNotifier extends StateNotifier<bool> {
 
   Future<bool> logout() async {
     final failureOrLogout = await logoutFuncion();
-    failureOrLogout.fold(
-      (failure) => null,
-      (logout) => {
-        if (logout) uidNotifier.resetUid(),
-        state = logout,
-      },
+    bool logoutStatus = failureOrLogout.fold(
+      (failure) => false,
+      (logout) => logout,
     );
-    return state;
+    if (logoutStatus) uidNotifier.resetUid();
+    return logoutStatus;
+  }
+
+  void setLogoutStatus(bool status) {
+    state = status;
   }
 }

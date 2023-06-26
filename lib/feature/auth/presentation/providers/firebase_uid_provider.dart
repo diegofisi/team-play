@@ -15,13 +15,14 @@ class UidNotifier extends StateNotifier<String?> {
 
   Future<String?> getUid() async {
     final failureOrUid = uid();
-    failureOrUid.fold(
+    return failureOrUid.fold(
       (failure) => null,
-      (uid) => {
-        state = uid,
-      },
+      (uid) => uid,
     );
-    return state;
+  }
+
+  void setUid(String? newUid) {
+    state = newUid;
   }
 
   void resetUid() {

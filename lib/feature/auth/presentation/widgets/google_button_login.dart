@@ -22,9 +22,10 @@ class GoogleButtonLogin extends ConsumerWidget {
       ),
       onPressed: () async {
         await ref.read(firebaseLoginProvider.notifier).login();
-        final isUser = await ref.read(isUserRegisterProvider);
+        final isUser = await ref
+            .read(isUserRegisteredProvider.notifier)
+            .getIsUserRegistered();
         final uid = ref.read(firebaseUIDProvider);
-        print("el uid es (desde el boton): $uid");
         isUser.fold(
           (fail) => {
             null,
