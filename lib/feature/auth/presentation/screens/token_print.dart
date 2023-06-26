@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:team_play/feature/auth/domain/repositories/auth_repository_provisional.dart';
+import 'package:team_play/feature/auth/domain/repositories/provisional.dart';
 import 'package:team_play/feature/auth/infrastructure/datasources/dio_test.dart';
-import 'package:team_play/feature/auth/presentation/providers/firebase_provider.dart';
 import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provider.dart';
 
 class TokenPrint extends ConsumerWidget {
@@ -13,13 +12,7 @@ class TokenPrint extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(children: [
       TextButton(
-        onPressed: () async {
-          //final result = await ref.read(getTokenProvider);
-          // result.fold(
-          //   (error) => print('Error: $error'),
-          //   (token) => print(token),
-          // );
-        },
+        onPressed: () async {},
         child: Text("test"),
       ),
       TextButton(
@@ -51,8 +44,11 @@ class TokenPrint extends ConsumerWidget {
         child: const Text("get token"),
       ),
       TextButton(
-          onPressed: () {
-            print(ref.read(firebaseUIDProvider));
+          onPressed: () async {
+            FirebaseAuth auth = FirebaseAuth.instance;
+            final User? user = auth.currentUser;
+            final String? uid = user?.uid;
+            print('UID: $uid');
           },
           child: Text("conseguir UUID")),
       TextButton(

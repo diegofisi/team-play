@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:team_play/config/theme/app_theme.dart';
-import 'package:team_play/feature/auth/presentation/screens/login_screen.dart';
-import 'package:team_play/feature/auth/presentation/screens/login_screen2.dart';
-import 'package:team_play/feature/auth/presentation/screens/signin_screen.dart';
-import 'package:team_play/feature/auth/presentation/screens/token_print.dart';
 
 import 'config/router/app_router.dart';
 

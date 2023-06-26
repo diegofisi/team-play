@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provider.dart';
 import 'package:team_play/feature/auth/presentation/widgets/custom_wave.dart';
 import 'package:team_play/feature/auth/presentation/widgets/google_button_login.dart';
 
 import '../widgets/image_login.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -33,9 +35,18 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   SizedBox(height: size.height * 0.35),
                   const ImageLogin(),
-                  const Column(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [GoogleButtonLogin()],
+                    children: [
+                      const GoogleButtonLogin(),
+                      TextButton(
+                        onPressed: () {
+                          final result = ref.read(firebaseUIDProvider);
+                          print("el uid es : $result");
+                        },
+                        child: Text("data"),
+                      ),
+                    ],
                   )
                 ],
               ),

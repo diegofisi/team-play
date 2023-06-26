@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_play/feature/auth/presentation/providers/firebase_login_provider.dart';
-import 'package:team_play/feature/auth/presentation/providers/firebase_provider.dart';
 import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provider.dart';
 import 'package:team_play/feature/auth/presentation/providers/user_provider.dart';
-import 'package:team_play/feature/home/presentation/screens/home_screen.dart';
 
 class GoogleButtonLogin extends ConsumerWidget {
   const GoogleButtonLogin({
@@ -26,20 +24,16 @@ class GoogleButtonLogin extends ConsumerWidget {
         await ref.read(firebaseLoginProvider.notifier).login();
         final isUser = await ref.read(isUserRegisterProvider);
         final uid = ref.read(firebaseUIDProvider);
+        print("el uid es (desde el boton): $uid");
         isUser.fold(
-          (l) => {
-            print("esto l $l"),
-            context.go('/home/$uid'),
+          (fail) => {
+            null,
           },
-          (r) => {
-            print("esto r $r"),
-            context.go('/register'),
+          (isUser) => {
+            print("el isUser es: $isUser"),
+            isUser ? context.go('/home/$uid') : context.go('/register'),
           },
         );
-        // print("desde el Either ${isUser.fold((l) => l, (r) => r)}");
-
-        // print("desde el login $uid");
-        // context.go('/home/$uid');
       },
       style: ButtonStyle(
         padding: MaterialStateProperty.all(

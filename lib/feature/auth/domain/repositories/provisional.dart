@@ -22,13 +22,9 @@ class AuthService {
       );
 
       return await FirebaseAuth.instance.signInWithCredential(credential);
-    } on PlatformException catch (e) {
-      // Aquí puedes manejar la PlatformException específicamente
-      print('Caught a PlatformException: ${e.message}');
+    } on PlatformException catch (_) {
       return null;
     } catch (e) {
-      // Aquí puedes manejar todos los demás errores
-      print(e);
       return null;
     }
   }
@@ -47,7 +43,6 @@ class AuthService {
           return TokenPrint();
         } else {
           return TokenPrint();
-          //return AuthScreen();
         }
       },
     );
