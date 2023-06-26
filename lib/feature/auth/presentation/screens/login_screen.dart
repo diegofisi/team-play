@@ -40,8 +40,10 @@ class LoginScreen extends ConsumerWidget {
                     children: [
                       const GoogleButtonLogin(),
                       TextButton(
-                        onPressed: () {
-                          final result = ref.read(firebaseUIDProvider);
+                        onPressed: () async {
+                          final result = await ref
+                              .read(firebaseUIDProvider.notifier)
+                              .getUid();
                           print("el uid es : $result");
                         },
                         child: Text("data"),

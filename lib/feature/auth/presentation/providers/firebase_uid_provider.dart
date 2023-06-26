@@ -1,11 +1,13 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:team_play/feature/auth/infrastructure/errors/failure.dart';
 import 'package:team_play/feature/auth/presentation/providers/firebase_provider.dart';
 
 final firebaseUIDProvider = StateNotifierProvider<UidNotifier, String?>(
   (ref) => UidNotifier(uid: ref.watch(firebaseRepositoryProvider).getUUID),
 );
 
-typedef GetUid = String? Function();
+typedef GetUid = Either<Failure, String> Function();
 
 class UidNotifier extends StateNotifier<String?> {
   final GetUid uid;
@@ -13,7 +15,13 @@ class UidNotifier extends StateNotifier<String?> {
 
   Future<String?> getUid() async {
     final failureOrUid = uid();
-    return failureOrUid == null ? null : state = failureOrUid;
+    failureOrUid.fold(
+      (failure) => null,
+      (uid) => {
+        state = uid,
+      },
+    );
+    return state;
   }
 
   void resetUid() {

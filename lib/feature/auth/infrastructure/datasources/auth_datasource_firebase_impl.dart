@@ -44,14 +44,14 @@ class AuthDatasourceFirebaseImpl extends AuthDataSourceFirebase {
   }
 
   @override
-  String? getUUID() {
+  Either<Failure, String> getUUID() {
     FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     final String? uid = user?.uid;
     if (uid != null) {
-      return uid;
+      return Right(uid);
     }
-    return null;
+    return Left(ServerFailure(400, 'No se pudo obtener el UUID'));
   }
 
   @override

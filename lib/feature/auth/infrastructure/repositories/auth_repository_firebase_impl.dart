@@ -14,7 +14,7 @@ class AuthRepositoryFirebaseImpl extends AuthDataRepositoryFirebase {
   }
   
   @override
-  String? getUUID() {
+  Either<Failure, String> getUUID() {
     return datasource.getUUID();
   }
   

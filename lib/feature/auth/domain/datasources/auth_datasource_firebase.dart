@@ -5,6 +5,6 @@ import 'package:team_play/feature/auth/infrastructure/errors/failure.dart';
 abstract class AuthDataSourceFirebase {
   Future<Either<Failure, UserCredential>> login();
   Future<Either<Failure, String>> getToken();
-  String? getUUID();
+  Either<Failure, String> getUUID();
   Future<Either<Failure, bool>> logout();
 }
