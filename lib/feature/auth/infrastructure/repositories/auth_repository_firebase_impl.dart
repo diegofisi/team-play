@@ -8,14 +8,31 @@ class AuthRepositoryFirebaseImpl extends AuthDataRepositoryFirebase {
   final AuthDataSourceFirebase datasource;
 
   AuthRepositoryFirebaseImpl(this.datasource);
-
+  
   @override
-  Future<Either<Failure, UserCredential>> login() {
+  Future<String?> getToken() {
+    return datasource.getToken();
+  }
+  
+  @override
+  String? getUUID() {
+    return datasource.getUUID();
+  }
+  
+  @override
+  bool isLogin() {
+    return datasource.isLogin();
+  }
+  
+  @override
+  Future<UserCredential?> login() {
     return datasource.login();
   }
   
   @override
-  Future<Either<Failure, String>> getToken() {
-    return datasource.getToken();
+  Future<void> logout() {
+    return datasource.logout();
   }
+
+  
 }

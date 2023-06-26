@@ -1,8 +1,9 @@
-import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:team_play/config/helpers/failure.dart';
 
 abstract class AuthDataSourceFirebase {
-  Future<Either<Failure, UserCredential>> login();
-  Future<Either<Failure, String>> getToken();
+  Future<UserCredential?> login();
+  Future<String?> getToken();
+  String? getUUID();
+  Future<void> logout();
+  bool isLogin();
 }

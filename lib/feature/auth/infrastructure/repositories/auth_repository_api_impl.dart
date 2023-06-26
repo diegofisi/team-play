@@ -11,8 +11,12 @@ class AuthRepositoryApiImpl extends AuthDataRepositoryApi{
 
   @override
   Future<Either<Failure, UserEntity>> getUserAPI() {
-    // TODO: implement getUserAPI
-    throw UnimplementedError();
+    return authDataSourceApi.getUserAPI();
+  }
+  
+  @override
+  Future<Either<Failure, bool>> isRegisterUser() {
+    return authDataSourceApi.isRegisterUser();
   }
 
 }

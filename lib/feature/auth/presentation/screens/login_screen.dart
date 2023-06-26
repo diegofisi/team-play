@@ -1,32 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:team_play/feature/auth/presentation/widgets/custom_wave.dart';
+import 'package:team_play/feature/auth/presentation/widgets/google_button_login.dart';
 
-class SignInPage extends StatefulWidget {
-  @override
-  _SignInPageState createState() => _SignInPageState();
-}
+import '../widgets/image_login.dart';
 
-class _SignInPageState extends State<SignInPage> {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-
-  Future<void> _handleSignIn() async {
-    try {
-      await _googleSignIn.signIn();
-    } catch (error) {
-      print(error);
-    }
-  }
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          child: Text(
-            'Inicia sesión con Google',
-            style: TextStyle(fontSize: 20.0, color: Colors.white),
-          ),
-          onPressed: _handleSignIn,
+      body: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Stack(
+          children: [
+            CustomWave(size: size),
+            Positioned(
+              right: size.width * 0.1,
+              top: -size.height * 0.1,
+              child: Image.asset(
+                'assets/logo/team_play_logo.png',
+                fit: BoxFit.contain,
+                height: size.height * 0.5,
+                width: size.width * 0.8,
+              ),
+            ),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: size.height * 0.35),
+                  const ImageLogin(),
+                  const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [GoogleButtonLogin()],
+                  )
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );

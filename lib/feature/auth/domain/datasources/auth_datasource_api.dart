@@ -4,4 +4,5 @@ import 'package:team_play/feature/auth/domain/entities/user.dart';
 
 abstract class AuthDataSourceApi {
   Future<Either<Failure, UserEntity>> getUserAPI();
+  Future<Either<Failure, bool>> isRegisterUser();
 }

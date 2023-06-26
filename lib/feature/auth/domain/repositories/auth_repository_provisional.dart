@@ -11,7 +11,6 @@ class AuthService {
       final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
       if (gUser == null) {
-        // El usuario canceló el proceso de inicio de sesión
         return null;
       }
 
@@ -37,6 +36,7 @@ class AuthService {
   signOut() async {
     await GoogleSignIn().disconnect();
     await FirebaseAuth.instance.signOut();
+   
   }
 
   handleAuthState() {
