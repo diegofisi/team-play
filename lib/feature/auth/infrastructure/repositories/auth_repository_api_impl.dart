@@ -3,6 +3,8 @@ import 'package:team_play/feature/auth/domain/datasources/auth_datasource_api.da
 import 'package:team_play/feature/auth/domain/entities/user.dart';
 import 'package:team_play/feature/auth/domain/repositories/auth_datasource_api.dart';
 import 'package:team_play/feature/auth/infrastructure/errors/failure.dart';
+import 'package:team_play/feature/auth/infrastructure/models/user_edit.dart';
+import 'package:team_play/feature/auth/infrastructure/models/user_request.dart';
 import 'package:team_play/feature/auth/infrastructure/models/user_response.dart';
 
 class AuthRepositoryApiImpl extends AuthDataRepositoryApi{
@@ -20,13 +22,17 @@ class AuthRepositoryApiImpl extends AuthDataRepositoryApi{
   }
 
   @override
-  Future<Either<Failure, UserResponse>> createUserAPI() {
-    return authDataSourceApi.createUserAPI();
+  Future<void> createUserAPI(UserRequest userRequest) {
+    return authDataSourceApi.createUserAPI(userRequest);
   }
 
   @override
-  Future<Either<Failure, UserResponse>> editUserAPI() {
-    return authDataSourceApi.editUserAPI();
+  Future<void> editUserAPI(UserEdit userRequest) {
+    return authDataSourceApi.editUserAPI(userRequest);
   }
 
+  @override
+  Future<List<UserResponse>> getUsersAPI() {
+    return authDataSourceApi.getUsersAPI();
+  }
 }

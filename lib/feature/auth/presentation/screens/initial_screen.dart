@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provider.dart';
-import 'package:team_play/feature/auth/presentation/providers/user_register_provider.dart';
+import 'package:team_play/feature/auth/presentation/providers/user_register_validation_provider.dart';
 
 class InitialScreen extends ConsumerWidget {
   const InitialScreen({super.key});
