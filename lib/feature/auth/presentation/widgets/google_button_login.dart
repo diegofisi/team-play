@@ -31,7 +31,6 @@ class GoogleButtonLogin extends ConsumerWidget {
             null,
           },
           (isUser) => {
-            print("el isUser es: $isUser"),
             isUser ? context.go('/home/$uid') : context.go('/register'),
           },
         );

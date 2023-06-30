@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:team_play/feature/auth/infrastructure/helpers/form.dart';
+import 'package:team_play/feature/shared/helpers/form.dart';
 
 class RadiusSlider extends StatefulWidget {
   final RadiusInput radius;

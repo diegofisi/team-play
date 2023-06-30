@@ -3,14 +3,16 @@ import 'package:team_play/feature/auth/presentation/screens/initial_screen.dart'
 import 'package:team_play/feature/auth/presentation/screens/login_screen.dart';
 import 'package:team_play/feature/auth/presentation/screens/register_screen.dart';
 import 'package:team_play/feature/auth/presentation/screens/token_print.dart';
-import 'package:team_play/feature/home/presentation/screens/home_screen.dart';
+import 'package:team_play/feature/home/screens/game_screen.dart';
+import 'package:team_play/feature/home/screens/home_screen.dart';
+import 'package:team_play/feature/home/screens/map_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const InitialScreen(),
+      builder: (context, state) => const GameRegistration(),
     ),
     GoRoute(
       path: '/login',

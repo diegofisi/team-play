@@ -5,6 +5,5 @@ import 'package:team_play/feature/auth/presentation/providers/user_repository_pr
 final createUserProvider =
     FutureProvider.family<void, UserRequest>((ref, userRequest) async {
   await ref.watch(authRepositoryProvider).createUserAPI(userRequest);
-  print("una vez mas desde el provider");
   return;
 });

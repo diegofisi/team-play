@@ -2,12 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:team_play/feature/auth/infrastructure/helpers/form.dart';
+import 'package:team_play/feature/shared/helpers/form.dart';
 import 'package:team_play/feature/auth/infrastructure/models/user_request.dart';
 import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provider.dart';
 import 'package:team_play/feature/auth/presentation/providers/form_provider.dart';
 import 'package:team_play/feature/auth/presentation/providers/user_register_provider.dart';
-import 'package:team_play/feature/home/presentation/screens/home_screen.dart';
+import 'package:team_play/feature/shared/helpers/determine_position.dart';
 import 'package:team_play/feature/shared/widgets/radius_slider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {

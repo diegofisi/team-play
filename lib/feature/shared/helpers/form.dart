@@ -5,6 +5,8 @@ enum NameValidationError { empty }
 
 enum AgeValidationError { invalid }
 
+enum PayValidatorError { invalid }
+
 enum PositionValidationError { empty }
 
 enum RadiusValidationError { invalid }
@@ -20,6 +22,16 @@ class NameInput extends FormzInput<String, NameValidationError> {
     return value.isNotEmpty && value.length >= 3
         ? null
         : NameValidationError.empty;
+  }
+}
+
+class PayInput extends FormzInput<int, PayValidatorError> {
+  const PayInput.pure() : super.pure(0);
+  const PayInput.dirty([int value = 0]) : super.dirty(value);
+
+  @override
+  PayValidatorError? validator(int value) {
+    return value >= 0 ? null : PayValidatorError.invalid;
   }
 }
 
@@ -61,7 +73,6 @@ class RadiusInput extends FormzInput<int, RadiusValidationError> {
 }
 
 enum Position { delantero, arquero, mediocampista, defensa }
-
 
 extension PositionX on Position {
   String toShortString() {

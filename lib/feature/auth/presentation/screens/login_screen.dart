@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provider.dart';
 import 'package:team_play/feature/auth/presentation/widgets/custom_wave.dart';
 import 'package:team_play/feature/auth/presentation/widgets/google_button_login.dart';
 
@@ -35,19 +34,10 @@ class LoginScreen extends ConsumerWidget {
                 children: [
                   SizedBox(height: size.height * 0.35),
                   const ImageLogin(),
-                  Column(
+                  const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const GoogleButtonLogin(),
-                      TextButton(
-                        onPressed: () async {
-                          final result = await ref
-                              .read(firebaseUIDProvider.notifier)
-                              .getUid();
-                          print("el uid es : $result");
-                        },
-                        child: Text("data"),
-                      ),
+                      GoogleButtonLogin(),
                     ],
                   )
                 ],

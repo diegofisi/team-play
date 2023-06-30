@@ -2,8 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:team_play/feature/auth/domain/repositories/provisional.dart';
-import 'package:team_play/feature/auth/infrastructure/datasources/dio_test.dart';
-import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provider.dart';
 
 class TokenPrint extends ConsumerWidget {
   const TokenPrint({super.key});
@@ -51,11 +49,6 @@ class TokenPrint extends ConsumerWidget {
             print('UID: $uid');
           },
           child: Text("conseguir UUID")),
-      TextButton(
-          onPressed: () {
-            PersonFirebase().getPerson();
-          },
-          child: Text("conseguir usuario")),
     ]);
   }
 }
