@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:team_play/feature/shared/helpers/form.dart';
+import 'package:team_play/feature/shared/helpers/slider_search.dart';
 
 class RadiusSlider extends StatefulWidget {
   final RadiusInput radius;
@@ -47,18 +47,12 @@ class RadiusSliderState extends State<RadiusSlider> {
             onChanged: (value) {
               setState(() {
                 _radius = RadiusInput.dirty(value.toInt());
-                _saveRadiusValue(
-                    _radius.value); // Guarda el valor cuando cambia
+                saveRadiusValue(_radius.value); // Guarda el valor cuando cambia
               });
             },
           ),
         ],
       ),
     );
-  }
-
-  void _saveRadiusValue(int radius) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('radius', radius);
   }
 }

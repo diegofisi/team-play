@@ -60,6 +60,7 @@ class MyMapState extends State<MyMap> {
             center: LatLng(
                 position?.latitude ?? -12.05, position?.longitude ?? -77.05),
             zoom: 13.5,
+            maxZoom: 18.0,
             onTap: _handleTap,
           ),
           nonRotatedChildren: [
@@ -94,7 +95,11 @@ class MyMapState extends State<MyMap> {
         width: 80.0,
         height: 80.0,
         point: latlng,
-        builder: (ctx) => const FlutterLogo(),
+        builder: (ctx) => const Icon(
+          Icons.location_on,
+          color: Color.fromARGB(255, 165, 8, 8),
+          size: 40,
+        ),
       );
     });
     if (_marker != null) {

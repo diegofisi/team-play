@@ -5,7 +5,6 @@ import 'package:team_play/feature/auth/domain/repositories/auth_datasource_api.d
 import 'package:team_play/feature/auth/infrastructure/errors/failure.dart';
 import 'package:team_play/feature/auth/infrastructure/models/user_edit.dart';
 import 'package:team_play/feature/auth/infrastructure/models/user_request.dart';
-import 'package:team_play/feature/auth/infrastructure/models/user_response.dart';
 
 class AuthRepositoryApiImpl extends AuthDataRepositoryApi{
   final AuthDataSourceApi authDataSourceApi;
@@ -31,8 +30,4 @@ class AuthRepositoryApiImpl extends AuthDataRepositoryApi{
     return authDataSourceApi.editUserAPI(userRequest);
   }
 
-  @override
-  Future<List<UserResponse>> getUsersAPI() {
-    return authDataSourceApi.getUsersAPI();
-  }
 }

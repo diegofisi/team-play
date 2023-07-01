@@ -63,9 +63,5 @@ class AuthDatasourceApiImpl extends AuthDataSourceApi {
     throw UnimplementedError();
   }
 
-  @override
-  Future<List<UserResponse>> getUsersAPI() {
-    // TODO: implement getUsersAPI
-    throw UnimplementedError();
-  }
+  
 }

@@ -13,6 +13,8 @@ enum RadiusValidationError { invalid }
 
 enum PositionInputError { empty }
 
+enum DescriptionValidationError { empty }
+
 class NameInput extends FormzInput<String, NameValidationError> {
   const NameInput.pure() : super.pure('');
   const NameInput.dirty([String value = '']) : super.dirty(value);
@@ -25,12 +27,12 @@ class NameInput extends FormzInput<String, NameValidationError> {
   }
 }
 
-class PayInput extends FormzInput<int, PayValidatorError> {
+class PayInput extends FormzInput<double, PayValidatorError> {
   const PayInput.pure() : super.pure(0);
-  const PayInput.dirty([int value = 0]) : super.dirty(value);
+  const PayInput.dirty([double value = 0]) : super.dirty(value);
 
   @override
-  PayValidatorError? validator(int value) {
+  PayValidatorError? validator(double value) {
     return value >= 0 ? null : PayValidatorError.invalid;
   }
 }
@@ -74,8 +76,20 @@ class RadiusInput extends FormzInput<int, RadiusValidationError> {
 
 enum Position { delantero, arquero, mediocampista, defensa }
 
-extension PositionX on Position {
+extension PositionExtension on Position {
   String toShortString() {
     return toString().split('.').last;
   }
 }
+
+class DescriptionInput extends FormzInput<String, DescriptionValidationError> {
+  const DescriptionInput.pure() : super.pure('');
+  const DescriptionInput.dirty([String value = '']) : super.dirty(value);
+
+  @override
+  DescriptionValidationError? validator(String value) {
+    return value.isNotEmpty ? null : DescriptionValidationError.empty;
+  }
+}
+
+

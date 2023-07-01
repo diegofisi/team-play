@@ -8,6 +8,7 @@ import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provi
 import 'package:team_play/feature/auth/presentation/providers/form_provider.dart';
 import 'package:team_play/feature/auth/presentation/providers/user_register_provider.dart';
 import 'package:team_play/feature/shared/helpers/determine_position.dart';
+import 'package:team_play/feature/shared/models/location.dart';
 import 'package:team_play/feature/shared/widgets/radius_slider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -90,8 +91,9 @@ class RegisterScreenState extends ConsumerState<RegisterScreen> {
                     : () async {
                         try {
                           ref.read(isLoadingProvider.notifier).state = true;
-                          final uid =
-                              ref.read(firebaseUIDProvider.notifier).getUid();
+                          final uid = await ref
+                              .read(firebaseUIDProvider.notifier)
+                              .getUid();
                           if (_formKey.currentState?.validate() == true) {
                             FirebaseAuth auth = FirebaseAuth.instance;
                             User? userFirebase = auth.currentUser;

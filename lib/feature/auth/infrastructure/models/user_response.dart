@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:team_play/feature/shared/models/location.dart';
 
 UserResponse userResponseFromJson(String str) => UserResponse.fromJson(json.decode(str));
 
@@ -42,20 +43,4 @@ class UserResponse {
         comments: List<dynamic>.from(json["comments"].map((x) => x)),
         v: json["__v"],
     );
-}
-
-class Location {
-    final double latitude;
-    final double longitude;
-
-    Location({
-        required this.latitude,
-        required this.longitude,
-    });
-
-    factory Location.fromJson(Map<String, dynamic> json) => Location(
-        latitude: json["latitude"]?.toDouble() ?? 0.0,
-        longitude: json["longitude"]?.toDouble() ?? 0.0,
-    );
-
 }
