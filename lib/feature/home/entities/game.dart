@@ -2,21 +2,21 @@ import 'package:team_play/feature/home/models/game_response.dart';
 import 'package:team_play/feature/shared/models/create_by.dart';
 import 'package:team_play/feature/shared/models/location.dart';
 
-
-
 class Game {
   final Location location;
+  final String nameGame;
   final String id;
   final String positionNeeded;
   final CreatedBy createdBy;
   final DateTime matchDate;
   final String matchTime;
-  final int fieldRentalPayment;
+  final double fieldRentalPayment;
   final String description;
   final String? playerInterested;
   final String title;
 
   Game({
+    required this.nameGame,
     required this.location,
     required this.id,
     required this.positionNeeded,
@@ -31,6 +31,7 @@ class Game {
 
   factory Game.fromGameResponse(GameResponse response) {
     return Game(
+      nameGame: response.title,
       location: response.location,
       id: response.id,
       positionNeeded: response.positionNeeded,
@@ -44,4 +45,3 @@ class Game {
     );
   }
 }
-

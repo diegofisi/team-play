@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:team_play/feature/home/entities/game.dart';
 import 'package:team_play/feature/home/providers/game_register_provider.dart';
 import 'package:team_play/feature/shared/helpers/slider_search.dart';
@@ -47,7 +49,7 @@ class GamesScreen extends ConsumerWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          //TODO: implementar la navegacion al perfil
+                          context.go('/profile');
                         },
                         child: const UserProfileImage(),
                       ),
@@ -55,15 +57,11 @@ class GamesScreen extends ConsumerWidget {
                       const Text("Mi Perfil"),
                     ],
                   ),
-                  //rellena con un espacio en blanco que ocupa todo el espacio posible
                   const Spacer(),
 
                   FutureBuilder(
                     future: getRadiusValue(),
-                    builder: (
-                      BuildContext context,
-                      AsyncSnapshot<int> snapshot,
-                    ) {
+                    builder: (BuildContext context, snapshot) {
                       if (snapshot.hasData) {
                         return Card(
                           child: Container(
@@ -83,6 +81,7 @@ class GamesScreen extends ConsumerWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 30),
               FutureBuilder<List<Game>>(
                 future: games,
                 builder: (BuildContext context, snapshot) {
@@ -93,16 +92,47 @@ class GamesScreen extends ConsumerWidget {
                     return Text('Error: ${snapshot.error}');
                   }
                   if (snapshot.hasData) {
-                    return TextButton(
-                      onPressed: () {
-                        print(snapshot
-                            .data); // Esto imprimirá los datos en la consola
-                      },
-                      child:
-                          Text('Partidos cargados: ${snapshot.data!.length}'),
+                    return Expanded(
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          mainAxisExtent: 150,
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10.0,
+                          mainAxisSpacing: 20.0,
+                        ),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    snapshot.data![index].title,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    'Fecha: ${DateFormat('yyyy-MM-dd').format(snapshot.data![index].matchDate)}',
+                                  ),
+                                  Text(
+                                      "Hora: ${snapshot.data![index].matchTime}"),
+                                  Text(
+                                      "se requiere: ${snapshot.data![index].positionNeeded}"),
+                                  Text(
+                                      "alquiler: S./${snapshot.data![index].fieldRentalPayment}"),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     );
                   }
-                  return Text('Aún no hay datos');
+                  return const Text(
+                      'No hay ningun partido disponible por tu zona :c');
                 },
               ),
             ],

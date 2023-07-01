@@ -41,14 +41,17 @@ class RadiusSliderState extends State<RadiusSlider> {
           Slider(
             value: _radius.value.toDouble(),
             min: 1.0,
-            max: 30.0,
+            max: 150.0,
             divisions: 10,
             label: '${_radius.value} km',
             onChanged: (value) {
-              setState(() {
-                _radius = RadiusInput.dirty(value.toInt());
-                saveRadiusValue(_radius.value); // Guarda el valor cuando cambia
-              });
+              setState(
+                () {
+                  _radius = RadiusInput.dirty(value.toInt());
+                  saveRadiusValue(
+                      _radius.value); // Guarda el valor cuando cambia
+                },
+              );
             },
           ),
         ],
