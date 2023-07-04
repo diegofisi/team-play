@@ -22,11 +22,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: appRouter,
-      debugShowCheckedModeBanner: false,
-      title: 'Team Play',
-      theme: AppTheme().getTheme(),
+    return GestureDetector(
+      onTap: () {
+        final focus = FocusScope.of(context);
+        final focusedChild = focus.focusedChild;
+        if (focusedChild != null && !focusedChild.hasPrimaryFocus) {
+          focusedChild.unfocus();
+        }
+      },
+      child: MaterialApp.router(
+        routerConfig: appRouter,
+        debugShowCheckedModeBanner: false,
+        title: 'Team Play',
+        theme: AppTheme().getTheme(),
+      ),
     );
   }
 }

@@ -4,41 +4,43 @@ import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provider.dart';
 import 'package:team_play/feature/auth/presentation/providers/form_provider.dart';
-import 'package:team_play/feature/home/models/game_request.dart';
-import 'package:team_play/feature/home/providers/game_register_provider.dart';
-import 'package:team_play/feature/shared/helpers/form.dart';
+import 'package:team_play/feature/home/models/tournament_request.dart';
+import 'package:team_play/feature/home/providers/tournament_provider.dart';
 import 'package:team_play/feature/shared/models/location.dart';
-import 'package:team_play/feature/shared/widgets/custom_map.dart';
 import 'package:team_play/feature/shared/widgets/form/form.dart';
+import 'package:team_play/feature/shared/widgets/custom_map.dart'; // Asegúrate de que la importación es correcta
 
-class GameRegistration extends ConsumerStatefulWidget {
-  const GameRegistration({Key? key}) : super(key: key);
+class TournamentRegistration extends ConsumerStatefulWidget {
+  const TournamentRegistration({Key? key}) : super(key: key);
 
   @override
-  GameRegistrationState createState() => GameRegistrationState();
+  TournamentRegistrationState createState() => TournamentRegistrationState();
 }
 
-class GameRegistrationState extends ConsumerState<GameRegistration> {
+class TournamentRegistrationState
+    extends ConsumerState<TournamentRegistration> {
   final _formKey = GlobalKey<FormState>();
-  LatLng? gameLocation;
+  LatLng? tournamentLocation;
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _costController = TextEditingController();
+  final _prizeController = TextEditingController();
   DateTime? startDate;
-  DateTime? endDate;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
-  Position? _position;
+  int teamCount = 4;
+  int? _position;
 
   @override
   void dispose() {
     _nameController.dispose();
     _descriptionController.dispose();
     _costController.dispose();
+    _prizeController.dispose();
     super.dispose();
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectStartDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -52,18 +54,26 @@ class GameRegistrationState extends ConsumerState<GameRegistration> {
     }
   }
 
-  Future<void> _selectTime(BuildContext context, bool isStart) async {
+  Future<void> _selectStartTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
     );
     if (pickedTime != null) {
       setState(() {
-        if (isStart) {
-          startTime = pickedTime;
-        } else {
-          endTime = pickedTime;
-        }
+        startTime = pickedTime;
+      });
+    }
+  }
+
+  Future<void> _selectEndTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (pickedTime != null) {
+      setState(() {
+        endTime = pickedTime;
       });
     }
   }
@@ -80,7 +90,7 @@ class GameRegistrationState extends ConsumerState<GameRegistration> {
             },
             child: const Icon(Icons.arrow_back_ios_new_outlined)),
         centerTitle: true,
-        title: const Text('Registrar Partido'),
+        title: const Text('Registrar Torneo'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -94,18 +104,48 @@ class GameRegistrationState extends ConsumerState<GameRegistration> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 NameFormField(controller: _nameController),
+
                 CostFormField(controller: _costController),
+                // Campo de premio
+                TextFormField(
+                  controller: _prizeController,
+                  decoration:
+                      const InputDecoration(labelText: 'Premio en soles'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingresa un premio válido';
+                    }
+                    return null;
+                  },
+                ),
                 StartDatePicker(
-                  selectDate: (context) => _selectDate(context),
+                  selectDate: (context) => _selectStartDate(context),
                   startDate: startDate,
                 ),
                 StartTimePicker(
-                  selectTime: (context) => _selectTime(context, true),
+                  selectTime: (context) => _selectStartTime(context),
                   startTime: startTime,
                 ),
-                EndTimePicker(
-                  selectTime: (context) => _selectTime(context, false),
-                  endTime: endTime,
+                // EndTimePicker(
+                //   selectTime: (context) => _selectEndTime(context),
+                //   endTime: endTime,
+                // ),
+                Row(
+                  children: [
+                    const Text('Cantidad de equipos'),
+                    const SizedBox(width: 20.0),
+                    NumberPicker(
+                      initialValue: _position ?? 4,
+                      values: const [4, 8, 16],
+                      onChanged: (newPosition) {
+                        if (newPosition != null) {
+                          setState(() {
+                            _position = newPosition;
+                          });
+                        }
+                      },
+                    ),
+                  ],
                 ),
                 Center(
                   child: SizedBox(
@@ -114,19 +154,11 @@ class GameRegistrationState extends ConsumerState<GameRegistration> {
                     child: MyMap(
                       onMarkerMoved: (newLocation) {
                         setState(() {
-                          gameLocation = newLocation;
+                          tournamentLocation = newLocation;
                         });
                       },
                     ),
                   ),
-                ),
-                PositionField(
-                  position: _position,
-                  onChanged: (Position? newPosition) {
-                    setState(() {
-                      _position = newPosition;
-                    });
-                  },
                 ),
                 DescriptionFormField(controller: _descriptionController),
                 Center(
@@ -135,7 +167,7 @@ class GameRegistrationState extends ConsumerState<GameRegistration> {
                     child: ElevatedButton(
                       onPressed: ref.watch(isLoadingProvider)
                           ? null
-                          : () {
+                          : () async {
                               try {
                                 ref.read(isLoadingProvider.notifier).state =
                                     true;
@@ -143,36 +175,40 @@ class GameRegistrationState extends ConsumerState<GameRegistration> {
                                     .read(firebaseUIDProvider.notifier)
                                     .getUid();
                                 if (_formKey.currentState!.validate() &&
-                                    gameLocation != null &&
+                                    tournamentLocation != null &&
                                     startDate != null &&
                                     startTime != null &&
                                     _position != null &&
-                                    startDate != null &&
-                                    startTime != null &&
                                     _costController.text.isNotEmpty &&
-                                    endTime != null) {
+                                    _prizeController.text.isNotEmpty) {
                                   double? cost =
                                       double.tryParse(_costController.text);
-                                  if (cost == null) {
+                                  int? prize =
+                                      int.tryParse(_prizeController.text);
+                                  if (cost == null || prize == null) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                           content: Text(
-                                              'Complete all fields before submitting')),
+                                              'Complete todos los campos antes de enviar')),
                                     );
                                     return;
                                   }
-                                  final game = GameRequest(
-                                    positionNeeded: _position!.toShortString(),
-                                    matchDate: startDate!,
-                                    matchTime:
-                                        "${startTime!.hour}:${startTime!.minute} - ${endTime!.hour}:${endTime!.minute}",
-                                    fieldRentalPayment: cost,
+                                  final tournament = TournamentRequest(
+                                    name: _nameController.text,
+                                    date: startDate!,
+                                    time:
+                                        "${startTime!.hour}:${startTime!.minute}",
+                                    inscription: cost.toInt(),
+                                    prize: prize,
                                     location: Location(
-                                        latitude: gameLocation!.latitude,
-                                        longitude: gameLocation!.longitude),
-                                    description: _descriptionController.text,
+                                        latitude: tournamentLocation!.latitude,
+                                        longitude:
+                                            tournamentLocation!.longitude),
+                                    teamCount: _position!,
                                   );
-                                  ref.read(createGameProvider(game).future);
+                                  await ref.read(
+                                      createTournamentProvider(tournament)
+                                          .future);
                                   ref.read(isLoadingProvider.notifier).state =
                                       false;
                                   if (context.mounted) {
@@ -181,13 +217,15 @@ class GameRegistrationState extends ConsumerState<GameRegistration> {
                                   }
                                 }
                               } catch (e) {
+                                ref.read(isLoadingProvider.notifier).state =
+                                    false;
                                 return;
                               } finally {
                                 ref.read(isLoadingProvider.notifier).state =
                                     false;
                               }
                             },
-                      child: const Text('Submit'),
+                      child: const Text('Registrar Torneo'),
                     ),
                   ),
                 ),
@@ -196,6 +234,34 @@ class GameRegistrationState extends ConsumerState<GameRegistration> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class NumberPicker extends StatelessWidget {
+  final int initialValue;
+  final List<int> values;
+  final Function(int? newValue) onChanged;
+
+  const NumberPicker({
+    Key? key,
+    required this.initialValue,
+    required this.values,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<int>(
+      value: initialValue,
+      items: [
+        for (final number in values)
+          DropdownMenuItem<int>(
+            value: number,
+            child: Text('$number'),
+          ),
+      ],
+      onChanged: onChanged,
     );
   }
 }

@@ -7,10 +7,10 @@ class LeaguesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ligas'),
+        title: const Text('Ligas'),
       ),
-      body: Center(
-        child: Text('Página de Ligas'),
+      body: const Center(
+        child: Text('En construccion'),
       ),
     );
   }

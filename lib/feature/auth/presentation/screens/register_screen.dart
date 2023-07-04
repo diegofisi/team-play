@@ -112,7 +112,9 @@ class RegisterScreenState extends ConsumerState<RegisterScreen> {
                             );
                             ref.read(createUserProvider(user).future);
                             ref.read(isLoadingProvider.notifier).state = false;
-                            Future.microtask(() => context.go("/home/$uid"));
+                            if (context.mounted) {
+                              Future.microtask(() => context.go("/home/$uid"));
+                            }
                           }
                         } catch (e) {
                           ref.read(isLoadingProvider.notifier).state = false;

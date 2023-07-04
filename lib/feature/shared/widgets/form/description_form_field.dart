@@ -14,9 +14,9 @@ class DescriptionFormField extends StatelessWidget {
         controller: controller,
         decoration: const InputDecoration(hintText: 'Descripcion'),
         validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter some text';
-          }
+          // if (value == null || value.isEmpty) {
+          //   return 'Please enter some text';
+          // }          
           return null;
         },
       ),

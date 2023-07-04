@@ -58,7 +58,6 @@ class GamesScreen extends ConsumerWidget {
                     ],
                   ),
                   const Spacer(),
-
                   FutureBuilder(
                     future: getRadiusValue(),
                     builder: (BuildContext context, snapshot) {
@@ -74,9 +73,8 @@ class GamesScreen extends ConsumerWidget {
                             ),
                           ),
                         );
-                      } else {
-                        return const CircularProgressIndicator();
                       }
+                      return const CircularProgressIndicator();
                     },
                   ),
                 ],
@@ -103,27 +101,36 @@ class GamesScreen extends ConsumerWidget {
                         ),
                         itemCount: snapshot.data!.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    snapshot.data![index].title,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    'Fecha: ${DateFormat('yyyy-MM-dd').format(snapshot.data![index].matchDate)}',
-                                  ),
-                                  Text(
-                                      "Hora: ${snapshot.data![index].matchTime}"),
-                                  Text(
-                                      "se requiere: ${snapshot.data![index].positionNeeded}"),
-                                  Text(
-                                      "alquiler: S./${snapshot.data![index].fieldRentalPayment}"),
-                                ],
+                          return GestureDetector(
+                            onTap: () async {
+                              final id = snapshot.data![index].id;
+                              await ref.read(getGameProvider(id).future);
+                              if (context.mounted) {
+                                Future.microtask(() => context.go('/game/$id'));
+                              }
+                            },
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      snapshot.data![index].title,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      'Fecha: ${DateFormat('yyyy-MM-dd').format(snapshot.data![index].matchDate)}',
+                                    ),
+                                    Text(
+                                        "Hora: ${snapshot.data![index].matchTime}"),
+                                    Text(
+                                        "se requiere: ${snapshot.data![index].positionNeeded}"),
+                                    Text(
+                                        "alquiler: S./${snapshot.data![index].fieldRentalPayment}"),
+                                  ],
+                                ),
                               ),
                             ),
                           );
@@ -132,7 +139,7 @@ class GamesScreen extends ConsumerWidget {
                     );
                   }
                   return const Text(
-                      'No hay ningun partido disponible por tu zona :c');
+                      'No hay ningun partido disponible por tu zona');
                 },
               ),
             ],

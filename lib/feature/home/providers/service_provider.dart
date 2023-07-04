@@ -1,4 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:team_play/feature/home/services/registration_service.dart';
+import 'package:team_play/feature/home/services/game_service.dart';
+import 'package:team_play/feature/home/services/tournament_service.dart';
 
-final serviceProvider = Provider((ref) => RegistrationService());
+final gameServiceProvider = Provider((ref) => GameService());
+
+final tournamentServiceProvider = Provider((ref) => TournamentService());

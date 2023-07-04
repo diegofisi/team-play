@@ -5,10 +5,18 @@ import 'package:team_play/feature/home/providers/service_provider.dart';
 
 final createGameProvider =
     FutureProvider.family<void, GameRequest>((ref, gameRequest) async {
-  await ref.watch(serviceProvider).createGame(gameRequest);
+  await ref.watch(gameServiceProvider).createGame(gameRequest);
   return;
 });
 
 final getGamesProvider = FutureProvider.autoDispose<List<Game>>(
-  (ref) async => await ref.read(serviceProvider).getNearGames(),
+  (ref) async => await ref.read(gameServiceProvider).getNearGames(),
+);
+
+final getGameProvider = FutureProvider.autoDispose.family<Game, String>(
+  (ref, gameId) async => await ref.read(gameServiceProvider).getGame(gameId),
+);
+
+final deleteGameProvider = FutureProvider.family<void, String>(
+  (ref, gameId) async => await ref.read(gameServiceProvider).deleteGame(gameId),
 );

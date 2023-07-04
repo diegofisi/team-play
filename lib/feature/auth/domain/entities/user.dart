@@ -13,8 +13,10 @@ class UserEntity {
   final int age;
   final String position;
   final LocationUser location;
+  final String id;
 
   UserEntity({
+    required this.id,
     required this.name,
     required this.username,
     required this.email,
@@ -25,6 +27,7 @@ class UserEntity {
   });
 
   factory UserEntity.fromJson(Map<String, dynamic> json) => UserEntity(
+        id: json["_id"],
         name: json["name"],
         username: json["username"],
         email: json["email"],
@@ -35,6 +38,7 @@ class UserEntity {
       );
 
   Map<String, dynamic> toJson() => {
+        "_id": id,
         "name": name,
         "username": username,
         "email": email,

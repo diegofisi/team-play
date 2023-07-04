@@ -2,11 +2,11 @@ import 'package:go_router/go_router.dart';
 import 'package:team_play/feature/auth/presentation/screens/initial_screen.dart';
 import 'package:team_play/feature/auth/presentation/screens/login_screen.dart';
 import 'package:team_play/feature/auth/presentation/screens/register_screen.dart';
-import 'package:team_play/feature/auth/presentation/screens/token_print.dart';
 import 'package:team_play/feature/home/screens/game_registration_screen.dart';
 import 'package:team_play/feature/home/screens/game_screen.dart';
 import 'package:team_play/feature/home/screens/home_screen.dart';
 import 'package:team_play/feature/home/screens/profile_screen.dart';
+import 'package:team_play/feature/home/screens/tournament_registration.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -42,8 +42,17 @@ final appRouter = GoRouter(
       builder: (context, state) => const ProfileScreen(),
     ),
     GoRoute(
-      path: '/game',
-      builder: (context, state) => const GameScreen(),
+      path: '/game/:gameId',
+      builder: (context, state) {
+        final gameId = state.pathParameters['gameId'];
+        return GameScreen(gameId!);
+      },
     ),
+    GoRoute(
+      path: '/tournament_registration',
+      builder: (context, state) {
+        return const TournamentRegistration();
+      },
+    )
   ],
 );

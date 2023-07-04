@@ -3,6 +3,7 @@ import 'package:team_play/feature/auth/infrastructure/models/user_response.dart'
 
 UserEntity userModeltoEntity(UserResponse userResponse) {
   return UserEntity(
+    id: userResponse.id,
     name: userResponse.name,
     username: userResponse.username,
     email: userResponse.email,

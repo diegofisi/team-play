@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:team_play/feature/auth/presentation/providers/firebase_logout_provider.dart';
 import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -11,11 +12,23 @@ class ProfileScreen extends ConsumerWidget {
     final uid = ref.read(firebaseUIDProvider.notifier).getUid();
     return Scaffold(
       body: Center(
-        child: TextButton(
-          onPressed: () {
-            context.go('/home/:$uid');
-          },
-          child: const Text("back"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+              onPressed: () {
+                context.go('/home/:$uid');
+              },
+              child: const Text("back"),
+            ),
+            TextButton(
+              onPressed: () async {
+                await ref.read(firebaseLogoutProvider.notifier).logout();
+                Future.microtask(() => context.go('/'));
+              },
+              child: const Text("logout"),
+            ),
+          ],
         ),
       ),
     );
