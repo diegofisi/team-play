@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_play/feature/auth/presentation/providers/user_information_provider.dart';
 
-class CustomSearch extends ConsumerWidget {
+class CustomSearch extends ConsumerStatefulWidget {
   final String heroTag;
   final String title;
   final String route;
@@ -16,13 +16,18 @@ class CustomSearch extends ConsumerWidget {
       required this.heroTag});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  CustomSearchState createState() => CustomSearchState();
+}
+
+class CustomSearchState extends ConsumerState<CustomSearch> {
+  @override
+  Widget build(BuildContext context) {
     return FloatingActionButton.extended(
       onPressed: () async {
         final user =
             await ref.read(userRepositoryProvider.notifier).retrieveUser();
         final role = user?.role ?? "user";
-        if (route == 'proximo' && role != 'administrador') {
+        if (widget.route == 'proximo' && role != 'administrador') {
           Future.microtask(
             () => showDialog(
               context: context,
@@ -45,24 +50,31 @@ class CustomSearch extends ConsumerWidget {
           );
           return;
         }
-        if (route == 'proximo' && role == 'administrador') {
-          return Future.microtask(() => context.go('/tournament_registration'));
+        if (widget.route == 'proximo' && role == 'administrador' && mounted) {
+          return Future.delayed(Duration.zero, () {
+            context.go('/tournament_registration');
+          });
         }
-        Future.microtask(() => context.go(route));
+        if (mounted) {
+          return Future.delayed(Duration.zero, () {
+            context.go(widget.route);
+          });
+        }
+        return;
       },
       hoverColor: Colors.blueGrey,
       label: Text(
-        title,
+        widget.title,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 18,
         ),
       ),
       icon: Icon(
-        icon,
+        widget.icon,
         size: 20,
       ),
-      heroTag: heroTag,
+      heroTag: widget.heroTag,
     );
   }
 }

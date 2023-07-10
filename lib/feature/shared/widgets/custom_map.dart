@@ -54,58 +54,65 @@ class MyMapState extends State<MyMap> {
             widget.onMarkerMoved?.call(_marker!.point);
           });
         }
-        return FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(
-            center: LatLng(
-                position?.latitude ?? -12.05, position?.longitude ?? -77.05),
-            zoom: 13.5,
-            maxZoom: 18.0,
-            onTap: _handleTap,
-          ),
-          nonRotatedChildren: [
-            RichAttributionWidget(
-              attributions: [
-                TextSourceAttribution(
-                  'OpenStreetMap contributors',
-                  onTap: () =>
-                      _launchURL('https://openstreetmap.org/copyright'),
-                ),
-              ],
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          child: FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              center: LatLng(
+                  position?.latitude ?? -12.05, position?.longitude ?? -77.05),
+              zoom: 13.5,
+              maxZoom: 18.0,
+              onTap: _handleTap,
             ),
-          ],
-          children: [
-            TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.playteam.app',
-            ),
-            if (_marker != null)
-              MarkerLayer(
-                markers: [_marker!],
+            nonRotatedChildren: [
+              RichAttributionWidget(
+                attributions: [
+                  TextSourceAttribution(
+                    'OpenStreetMap contributors',
+                    onTap: () =>
+                        _launchURL('https://openstreetmap.org/copyright'),
+                  ),
+                ],
               ),
-          ],
+            ],
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.playteam.app',
+              ),
+              if (_marker != null)
+                MarkerLayer(
+                  markers: [_marker!],
+                ),
+            ],
+          ),
         );
       },
     );
   }
 
   void _handleTap(TapPosition position, LatLng latlng) {
-    setState(() {
-      _marker = Marker(
-        width: 80.0,
-        height: 80.0,
-        point: latlng,
-        builder: (ctx) => const Icon(
-          Icons.location_on,
-          color: Color.fromARGB(255, 165, 8, 8),
-          size: 40,
-        ),
-      );
-    });
-    if (_marker != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        widget.onMarkerMoved?.call(_marker!.point);
+    try {
+      setState(() {
+        _marker = Marker(
+          width: 80.0,
+          height: 80.0,
+          point: latlng,
+          builder: (ctx) => const Icon(
+            Icons.location_on,
+            color: Color.fromARGB(255, 165, 8, 8),
+            size: 40,
+          ),
+        );
       });
+      if (_marker != null && mounted) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          widget.onMarkerMoved?.call(_marker!.point);
+        });
+      }
+    } catch (e) {
+      return;
     }
   }
 

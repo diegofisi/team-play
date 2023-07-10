@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provider.dart';
 import 'package:team_play/feature/auth/presentation/providers/user_information_provider.dart';
 import 'package:team_play/feature/home/providers/game_register_provider.dart';
+import 'package:team_play/feature/shared/widgets/chat_widget.dart';
 
 class GameScreen extends ConsumerWidget {
   final String gameID;
@@ -19,10 +20,16 @@ class GameScreen extends ConsumerWidget {
         future: ref.read(getGameProvider(gameID).future),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            //print("object");
-            //print(snapshot.data.toString());
             return Scaffold(
               appBar: AppBar(
+                leading: IconButton(
+                  onPressed: () async {
+                    final uid =
+                        await ref.read(firebaseUIDProvider.notifier).getUid();
+                    Future.microtask(() => context.go('/home/:$uid'));
+                  },
+                  icon: const Icon(Icons.arrow_back),
+                ),
                 centerTitle: true,
                 title: Text(snapshot.data!.title),
               ),
@@ -93,56 +100,8 @@ class GameScreen extends ConsumerWidget {
                       'Alguna otra duda? Chatea con el creador la solicitud',
                       style: TextStyle(overflow: TextOverflow.clip),
                     ),
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     launchUrl(
-                    //         'https://api.whatsapp.com/send?phone=51999999999');
-                    //   },
-                    //   child: const Text('Contactar'),
-                    // ),
                     const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        // FutureBuilder(
-                        //   future: ref.read(getGameProvider(gameID).future),
-                        //   builder: (context, snapshot) {
-                        //     if (snapshot.hasData) {
-                        //       return FutureBuilder(
-                        //         future: ref
-                        //             .read(userRepositoryProvider.notifier)
-                        //             .retrieveUser(),
-                        //         builder: ((context, snapshot2) {
-                        //           if (snapshot2.hasData) {
-                        //             if (snapshot.data!.createdBy.username ==
-                        //                 snapshot2.data!.username) {
-                        //               return ElevatedButton(
-                        //                 onPressed: () async {
-                        //                   await ref.read(
-                        //                       getGameProvider(gameID).future);
-                        //                 },
-                        //                 child: const Text('Eliminar'),
-                        //               );
-                        //             }
-                        //           }
-                        //           return Container();
-                        //         }),
-                        //       );
-                        //     }
-                        //     return Container();
-                        //   },
-                        // ),
-                        // TextButton(
-                        //   onPressed: () async {
-                        //     final uid = await ref
-                        //         .read(firebaseUIDProvider.notifier)
-                        //         .getUid();
-                        //     Future.microtask(() => context.go('/home/:$uid'));
-                        //   },
-                        //   child: const Text("volver"),
-                        // ),
-                      ],
-                    )
+                    ChatRedirectButton(chatId: snapshot.data!.createdBy.id),
                   ],
                 ),
               ),

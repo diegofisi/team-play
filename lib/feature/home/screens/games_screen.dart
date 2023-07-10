@@ -49,7 +49,9 @@ class GamesScreen extends ConsumerWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          context.go('/profile');
+                          Future.delayed(Duration.zero, () {
+                            context.go('/profile');
+                          });
                         },
                         child: const UserProfileImage(),
                       ),

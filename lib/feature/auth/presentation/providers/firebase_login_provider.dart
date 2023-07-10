@@ -24,4 +24,5 @@ class LoginNotifier extends StateNotifier<UserCredential?> {
       (credential) => state = credential,
     );
   }
+  
 }

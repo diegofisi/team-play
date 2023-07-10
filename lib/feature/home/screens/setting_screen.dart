@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:team_play/feature/shared/helpers/form.dart';
+import 'package:team_play/feature/shared/widgets/radius_slider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -70,6 +72,21 @@ List<Settings> buildSettings(BuildContext context) {
                   },
                 ),
               ],
+            );
+          },
+        );
+      },
+    ),
+    Settings(
+      title: "Radio de busqueda",
+      icon: Icons.notifications,
+      onTap: () {
+        showCupertinoDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoAlertDialog(
+              title: const Text('Notificaciones'),
+              content: Container(),
             );
           },
         );
