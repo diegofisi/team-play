@@ -20,7 +20,7 @@ class ChatRedirectButton extends StatelessWidget {
         ),
         onPressed: () {
           Future.delayed(Duration.zero, () {
-            context.go('/chat/:$chatId');
+            context.go('/chat/$chatId');
           });
         },
         icon: const Icon(Icons.chat),

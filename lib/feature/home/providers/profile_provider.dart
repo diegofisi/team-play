@@ -4,6 +4,7 @@ import 'package:team_play/feature/home/entities/profile.dart';
 import 'package:team_play/feature/home/entities/user_profile.dart';
 import 'package:team_play/feature/home/models/comment_request.dart';
 import 'package:team_play/feature/home/services/profile.dart';
+import 'package:team_play/feature/shared/models/chat.dart';
 
 final profileSevice = Provider((ref) => ProfileService());
 
@@ -19,4 +20,9 @@ final registerCommentProvider =
     FutureProvider.family<void, Tuple2<String, ComentRequest>>(
   (ref, data) async =>
       await ref.read(profileSevice).registerComment(data.value1, data.value2),
+);
+
+final getUserProfileMessageProvider =
+    FutureProvider.autoDispose.family<List<Chat>, String>(
+  (ref, uid) async => await ref.read(profileSevice).getUserProfileMessage(uid),
 );

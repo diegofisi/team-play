@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provider.dart';
 import 'package:team_play/feature/auth/presentation/providers/user_information_provider.dart';
 import 'package:team_play/feature/home/providers/game_register_provider.dart';
+import 'package:team_play/feature/home/providers/profile_provider.dart';
 import 'package:team_play/feature/shared/widgets/chat_widget.dart';
 
 class GameScreen extends ConsumerWidget {
@@ -101,7 +102,41 @@ class GameScreen extends ConsumerWidget {
                       style: TextStyle(overflow: TextOverflow.clip),
                     ),
                     const SizedBox(height: 20),
-                    ChatRedirectButton(chatId: snapshot.data!.createdBy.id),
+                    FutureBuilder(
+                      future: ref.read(firebaseUIDProvider.notifier).getUid(),
+                      builder: (context, snapshot1) {
+                        if (snapshot1.hasData) {
+                          final game = ref.read(getGameProvider(gameID).future);
+                          return FutureBuilder(
+                            future: game,
+                            builder: (context, snapshot2) {
+                              if (snapshot2.hasData) {
+                                final userProfile = ref.read(
+                                    getUserProfileProvider(snapshot1.data!)
+                                        .future);
+                                return FutureBuilder(
+                                  future: userProfile,
+                                  builder: (context, snapshot3) {
+                                    if (snapshot3.hasData) {
+                                      if (snapshot3.data!.id !=
+                                          snapshot2.data!.createdBy.id) {
+                                        return ChatRedirectButton(
+                                          chatId: snapshot2.data!.createdBy.id,
+                                        );
+                                      }
+                                      return Container();
+                                    }
+                                    return Container();
+                                  },
+                                );
+                              }
+                              return Container();
+                            },
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
                   ],
                 ),
               ),

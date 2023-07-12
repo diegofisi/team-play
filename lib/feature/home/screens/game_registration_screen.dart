@@ -74,11 +74,12 @@ class GameRegistrationState extends ConsumerState<GameRegistration> {
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
-            onTap: () {
-              final uid = ref.read(firebaseUIDProvider.notifier).getUid();
-              context.go('/home/$uid');
-            },
-            child: const Icon(Icons.arrow_back_ios_new_outlined)),
+          onTap: () {
+            final uid = ref.read(firebaseUIDProvider.notifier).getUid();
+            context.go('/home/$uid');
+          },
+          child: const Icon(Icons.arrow_back_ios_new_outlined),
+        ),
         centerTitle: true,
         title: const Text('Registrar Partido'),
       ),
