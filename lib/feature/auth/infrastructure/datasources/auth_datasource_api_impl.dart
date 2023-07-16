@@ -62,6 +62,4 @@ class AuthDatasourceApiImpl extends AuthDataSourceApi {
     // TODO: implement editUserAPI
     throw UnimplementedError();
   }
-
-  
 }

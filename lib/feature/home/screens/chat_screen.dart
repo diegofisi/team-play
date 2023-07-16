@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -19,18 +21,27 @@ class ChatScreen extends ConsumerStatefulWidget {
 
 class ChatScreenState extends ConsumerState<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   UserProfile? userProfile;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     initUserProfile();
+    startUIUpdateTimer();
   }
 
   Future<void> initUserProfile() async {
     final uid = await ref.read(firebaseUIDProvider.notifier).getUid();
     userProfile = await ref.read(getUserProfileProvider(uid!).future);
     setState(() {});
+  }
+
+  void startUIUpdateTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 3), (_) {
+      setState(() {});
+    });
   }
 
   @override
@@ -69,27 +80,29 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                   icon: const Icon(Icons.send),
                   onPressed: () async {
                     final messageText = _messageController.text;
-                    final uid2 =
-                        await ref.read(firebaseUIDProvider.notifier).getUid();
+                    if (messageText.isEmpty) return;
                     userProfile!.chats
                         .firstWhere((chat) => chat.userId == widget.id)
                         .messages
                         .add(
                           Message(
-                            sender: uid2!,
+                            sender: userProfile!.id,
                             recipient: widget.id,
                             content: messageText,
                             id: 'temp_id',
                           ),
                         );
                     _messageController.clear();
-                    setState(() {});
                     final mensaje = MessageRequest(
                       recipientId: widget.id,
                       message: messageText,
                     );
                     await ref.read(messageSeviceProvider(mensaje).future);
                     await initUserProfile();
+                    setState(() {
+                      _scrollController
+                          .jumpTo(_scrollController.position.maxScrollExtent);
+                    });
                   },
                 ),
               ],
@@ -101,39 +114,51 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Widget buildChatList() {
-    Chat? chatWithUser =
-        userProfile!.chats.firstWhere((chat) => chat.userId == widget.id);
+    Chat? chatWithUser;
 
-    if (chatWithUser.messages.isNotEmpty) {
-      return ListView.builder(
-        itemCount: chatWithUser.messages.length,
-        itemBuilder: (context, index) {
-          Message message = chatWithUser.messages[index];
-          bool isSentByMe = message.sender == widget.id;
-
-          return Align(
-            alignment:
-                isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: isSentByMe ? Colors.blue[200] : Colors.grey[200],
-              ),
-              child: Text(message.content),
-            ),
-          );
-        },
-      );
+    for (Chat chat in userProfile!.chats) {
+      if (chat.userId == widget.id) {
+        chatWithUser = chat;
+        break;
+      }
     }
 
-    return Container();
+    if (chatWithUser == null) {
+      chatWithUser = Chat(
+        userId: widget.id,
+        messages: [],
+        id: '',
+      );
+      userProfile!.chats.add(chatWithUser);
+    }
+
+    return ListView.builder(
+      controller: _scrollController,
+      itemCount: chatWithUser.messages.length,
+      itemBuilder: (context, index) {
+        Message message = chatWithUser!.messages[index];
+        bool isSentByMe = message.sender == widget.id;
+        return Align(
+          alignment: isSentByMe ? Alignment.centerLeft : Alignment.centerRight,
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: isSentByMe ? Colors.grey[200] : Colors.blue[200],
+            ),
+            child: Text(message.content),
+          ),
+        );
+      },
+    );
   }
 
   @override
   void dispose() {
+    _timer?.cancel();
     _messageController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 }

@@ -3,8 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:team_play/feature/shared/helpers/form.dart';
-import 'package:team_play/feature/shared/widgets/radius_slider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -37,6 +35,8 @@ class Settings {
 }
 
 List<Settings> buildSettings(BuildContext context) {
+  GoogleSignIn _googleSignIn = GoogleSignIn();
+
   return [
     Settings(
       title: "Mi Perfil",
@@ -92,38 +92,6 @@ List<Settings> buildSettings(BuildContext context) {
         );
       },
     ),
-    // Settings(
-    //   title: "Ayuda",
-    //   icon: Icons.privacy_tip,
-    //   onTap: () {
-    //     showCupertinoDialog(
-    //       context: context,
-    //       builder: (BuildContext context) {
-    //         return CupertinoAlertDialog(
-    //           title: const Text('Ayuda'),
-    //           content: const Text('Proximamente'),
-    //           actions: [
-    //             CupertinoDialogAction(
-    //               child: const Text('OK'),
-    //               onPressed: () {
-    //                 Navigator.of(context).pop();
-    //               },
-    //             ),
-    //             CupertinoDialogAction(
-    //               child: const Text(
-    //                 'Cancelar',
-    //                 style: TextStyle(color: Colors.red),
-    //               ),
-    //               onPressed: () {
-    //                 Navigator.of(context).pop();
-    //               },
-    //             ),
-    //           ],
-    //         );
-    //       },
-    //     );
-    //   },
-    // ),
     Settings(
       title: "Acerca de",
       icon: Icons.security,
@@ -273,9 +241,15 @@ List<Settings> buildSettings(BuildContext context) {
       title: "Logout",
       icon: Icons.logout,
       onTap: () async {
-        await GoogleSignIn().disconnect();
-        await FirebaseAuth.instance.signOut();
-        Future.microtask(() => context.go('/login'));
+        try {
+          if (await _googleSignIn.isSignedIn()) {
+            await _googleSignIn.disconnect();
+          }
+          await FirebaseAuth.instance.signOut();
+          Future.microtask(() => context.go('/login'));
+        } catch (e) {
+          print('Error: $e');
+        }
       },
     ),
   ];

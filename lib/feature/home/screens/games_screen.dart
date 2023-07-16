@@ -8,6 +8,7 @@ import 'package:team_play/feature/home/providers/game_register_provider.dart';
 import 'package:team_play/feature/shared/helpers/slider_search.dart';
 import 'package:team_play/feature/shared/widgets/custom_button_search.dart';
 import 'package:team_play/feature/shared/widgets/user_profile_image.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class GamesScreen extends ConsumerWidget {
   const GamesScreen({super.key});
@@ -15,6 +16,7 @@ class GamesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final games = ref.watch(getGamesProvider.future);
+    final user = ref.watch(userRepositoryProvider.notifier).retrieveUser();
     return Center(
       child: SafeArea(
         child: Padding(
@@ -49,9 +51,14 @@ class GamesScreen extends ConsumerWidget {
                   Column(
                     children: [
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
+                          final user = await ref
+                              .read(userRepositoryProvider.notifier)
+                              .retrieveUser();
+                          print("user id: " + user!.id);
                           Future.delayed(Duration.zero, () {
-                            context.go('/profile');
+                            Future.microtask(
+                                () => context.go('/profile/${user.id}'));
                           });
                         },
                         child: const UserProfileImage(),
@@ -63,15 +70,15 @@ class GamesScreen extends ConsumerWidget {
                   const Spacer(),
                   FutureBuilder(
                     future: getRadiusValue(),
-                    builder: (BuildContext context, snapshot) {
-                      if (snapshot.hasData) {
+                    builder: (BuildContext context, snapshot1) {
+                      if (snapshot1.hasData) {
                         return Card(
                           child: Container(
                             margin: const EdgeInsets.all(10),
                             child: Column(
                               children: [
                                 Text(
-                                    "Partidos a ${snapshot.data.toString()} km de distancia"),
+                                    "Partidos a ${snapshot1.data.toString()} km de distancia"),
                               ],
                             ),
                           ),
@@ -85,89 +92,112 @@ class GamesScreen extends ConsumerWidget {
               const SizedBox(height: 30),
               FutureBuilder<List<Game>>(
                 future: games,
-                builder: (BuildContext context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
+                builder: (BuildContext context, snapshot2) {
+                  if (snapshot2.connectionState == ConnectionState.waiting) {
                     return const Text("Cargando...");
                   }
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
+                  if (snapshot2.hasError) {
+                    return Text('Error: ${snapshot2.error}');
                   }
-                  if (snapshot.hasData) {
+                  if (snapshot2.hasData) {
                     return Expanded(
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          mainAxisExtent: 210,
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 20.0,
-                        ),
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final user = ref.watch(userRepositoryProvider);
-
-                          return GestureDetector(
-                            onTap: () async {
-                              final id = snapshot.data![index].id;
-                              await ref.read(getGameProvider(id).future);
-                              if (context.mounted) {
-                                Future.microtask(() => context.go('/game/$id'));
-                              }
-                            },
-                            child: SingleChildScrollView(
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        snapshot.data![index].title,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        'Fecha: ${DateFormat('yyyy-MM-dd').format(snapshot.data![index].matchDate)}',
-                                      ),
-                                      Text(
-                                          "Hora: ${snapshot.data![index].matchTime}"),
-                                      Text(
-                                          "se requiere: ${snapshot.data![index].positionNeeded}"),
-                                      Text(
-                                          "alquiler: S./${snapshot.data![index].fieldRentalPayment}"),
-                                      if (snapshot.data![index].createdBy.id ==
-                                          user?.id) ...[
-                                        Row(
-                                          children: [
-                                            const Text("Eliminar partido: "),
-                                            IconButton(
-                                              onPressed: () async {
-                                                final id =
-                                                    snapshot.data![index].id;
-                                                await ref.read(
-                                                    deleteGameProvider(id)
-                                                        .future);
-                                                if (context.mounted) {
-                                                  Future.microtask(() =>
-                                                      context.go('/games'));
-                                                }
-                                              },
-                                              icon: const Icon(Icons.delete),
-                                            ),
-                                          ],
+                      child: MasonryGridView.count(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 4,
+                        crossAxisSpacing: 4,
+                        itemCount: snapshot2.data!.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  final id = snapshot2.data![index].id;
+                                  await ref.read(getGameProvider(id).future);
+                                  if (context.mounted) {
+                                    Future.microtask(
+                                        () => context.go('/game/$id'));
+                                  }
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          snapshot2.data![index].title,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold),
                                         ),
+                                        Text(
+                                          'Fecha: ${DateFormat('yyyy-MM-dd').format(snapshot2.data![index].matchDate)}',
+                                        ),
+                                        Text(
+                                            "Hora: ${snapshot2.data![index].matchTime}"),
+                                        Text(
+                                            "se requiere: ${snapshot2.data![index].positionNeeded}"),
+                                        Text(
+                                            "alquiler: S./${snapshot2.data![index].fieldRentalPayment}"),
                                       ],
-                                    ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                              GestureDetector(
+                                child: Column(
+                                  children: [
+                                    FutureBuilder(
+                                      future: user,
+                                      builder: (context, snapshot3) {
+                                        if (snapshot3.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const Text("Cargando...");
+                                        }
+                                        if (snapshot3.hasData) {
+                                          if (snapshot2
+                                                  .data![index].createdBy.id ==
+                                              snapshot3.data!.id) {
+                                            return Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const Text(
+                                                    "Eliminar partido: "),
+                                                IconButton(
+                                                  onPressed: () async {
+                                                    final id = snapshot2
+                                                        .data![index].id;
+                                                    await ref.read(
+                                                        deleteGameProvider(id)
+                                                            .future);
+                                                    if (context.mounted) {
+                                                      Future.microtask(() =>
+                                                          context.go(
+                                                              '/home/:${snapshot3.data!.id}'));
+                                                    }
+                                                    
+                                                  },
+                                                  icon:
+                                                      const Icon(Icons.delete),
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                        }
+                                        return const Text("");
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
                           );
                         },
                       ),
                     );
                   }
+
                   return const Text(
                       'No hay ningun partido disponible por tu zona');
                 },
