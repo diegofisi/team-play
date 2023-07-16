@@ -30,4 +30,3 @@ final registerGameProvider =
 );
 
 
-final gamesListProvider = StateProvider<List<Game>>((ref) => []);

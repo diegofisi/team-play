@@ -123,10 +123,17 @@ class GameScreen extends ConsumerWidget {
                 const SizedBox(height: 20),
                 if (game.description != '') const Text("Comentarios: "),
                 Text(game.description),
-                const Text(
-                  'Alguna otra duda? Chatea con el creador la solicitud',
-                  style: TextStyle(overflow: TextOverflow.clip),
-                ),
+                const SizedBox(height: 10),
+                if (game.createdBy.id != userProfile.id)
+                  const Text(
+                    'Alguna otra duda? Chatea con el creador la solicitud',
+                    style: TextStyle(overflow: TextOverflow.clip),
+                  ),
+                if (game.createdBy.id == userProfile.id)
+                  const Text(
+                    "eres el creador del partido",
+                    style: TextStyle(overflow: TextOverflow.clip),
+                  ),
                 GestureDetector(
                   onTap: () async {
                     final id = game.createdBy.id;
@@ -155,8 +162,6 @@ class GameScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                if (game.createdBy.id == userProfile.id)
-                  const Text("Eres el creador del partido"),
                 if (game.createdBy.id != userProfile.id &&
                     game.playerInterested == null)
                   ElevatedButton(
@@ -178,7 +183,7 @@ class GameScreen extends ConsumerWidget {
                     game.createdBy.id == userProfile.id)
                   const Column(
                     children: [
-                      Text("Chatea con el jugador interesado)"),
+                      Text("Chatea con el jugador interesado"),
                     ],
                   ),
                 if (game.createdBy.id != userProfile.id &&
@@ -186,7 +191,35 @@ class GameScreen extends ConsumerWidget {
                   ChatRedirectButton(chatId: game.createdBy.id),
                 if (game.createdBy.id == userProfile.id &&
                     game.playerInterested != null)
-                  ChatRedirectButton(chatId: game.playerInterested!)
+                  ChatRedirectButton(chatId: game.playerInterested!),
+                if (userProfile.id == game.createdBy.id)
+                  GestureDetector(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Eliminar partido: "),
+                        IconButton(
+                          onPressed: () async {
+                            await ref.read(deleteGameProvider(game.id).future);
+                            if (context.mounted) {
+                              Future.microtask(
+                                () =>
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Partido eliminado"),
+                                  ),
+                                ),
+                              );
+                              Future.microtask(
+                                () => context.go('/home/:$uid'),
+                              );
+                            }
+                          },
+                          icon: const Icon(Icons.delete),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),

@@ -16,7 +16,6 @@ class GamesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final games = ref.watch(getGamesProvider.future);
-    final user = ref.watch(userRepositoryProvider.notifier).retrieveUser();
     return Center(
       child: SafeArea(
         child: Padding(
@@ -144,53 +143,6 @@ class GamesScreen extends ConsumerWidget {
                                   ),
                                 ),
                               ),
-                              GestureDetector(
-                                child: Column(
-                                  children: [
-                                    FutureBuilder(
-                                      future: user,
-                                      builder: (context, snapshot3) {
-                                        if (snapshot3.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Text("Cargando...");
-                                        }
-                                        if (snapshot3.hasData) {
-                                          if (snapshot2
-                                                  .data![index].createdBy.id ==
-                                              snapshot3.data!.id) {
-                                            return Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                const Text(
-                                                    "Eliminar partido: "),
-                                                IconButton(
-                                                  onPressed: () async {
-                                                    final id = snapshot2
-                                                        .data![index].id;
-                                                    await ref.read(
-                                                        deleteGameProvider(id)
-                                                            .future);
-                                                    if (context.mounted) {
-                                                      Future.microtask(() =>
-                                                          context.go(
-                                                              '/home/:${snapshot3.data!.id}'));
-                                                    }
-                                                    
-                                                  },
-                                                  icon:
-                                                      const Icon(Icons.delete),
-                                                ),
-                                              ],
-                                            );
-                                          }
-                                        }
-                                        return const Text("");
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              )
                             ],
                           );
                         },

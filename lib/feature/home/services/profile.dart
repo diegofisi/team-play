@@ -1,7 +1,5 @@
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:team_play/feature/home/entities/profile.dart';
 import 'package:team_play/feature/home/entities/user_profile.dart';
 import 'package:team_play/feature/home/models/comment_request.dart';
@@ -9,7 +7,7 @@ import 'package:team_play/feature/home/models/profile_response.dart';
 import 'package:team_play/feature/home/models/user_profile_response.dart';
 import 'package:team_play/feature/shared/models/chat.dart';
 
-import '../models/profile_update.dart';
+import '../models/profile_update_request.dart';
 
 class ProfileService {
   final Dio dio = Dio();
@@ -69,12 +67,16 @@ class ProfileService {
     return user;
   }
 
-  Future<void> updateProfile(String id, ProfileUpdate profile) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    final token = await auth.currentUser!.getIdToken();
-    dio.options.headers['content-Type'] = 'application/json';
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    await dio.put('http://http://localhost:3000/api/users/$id', data: profile);
+  Future<void> updateProfile(String id, ProfileUpdateRequest profile) async {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      final token = await auth.currentUser!.getIdToken();
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers['Authorization'] = 'Bearer $token';
+      await dio.put('http://10.0.2.2:3000/api/users/$id', data: profile);
+    } catch (e) {
+      return;
+    }
   }
 
   Future<void> registerComment(String id, ComentRequest comment) async {

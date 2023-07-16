@@ -163,6 +163,7 @@ class GameRegistrationState extends ConsumerState<GameRegistration> {
                                     return;
                                   }
                                   final game = GameRequest(
+                                    title: _nameController.text,
                                     positionNeeded: _position!.toShortString(),
                                     matchDate: startDate!,
                                     matchTime:

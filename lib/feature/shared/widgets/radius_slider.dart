@@ -21,6 +21,13 @@ class RadiusSliderState extends State<RadiusSlider> {
   void initState() {
     super.initState();
     _radius = widget.radius;
+    loadRadiusValue();
+  }
+
+  void loadRadiusValue() async {
+    int radiusValue = await getRadiusValue();
+    _radius = RadiusInput.dirty(radiusValue);
+    setState(() {});
   }
 
   @override

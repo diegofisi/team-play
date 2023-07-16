@@ -3,13 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:team_play/feature/home/entities/profile.dart';
 import 'package:team_play/feature/home/entities/user_profile.dart';
 import 'package:team_play/feature/home/models/comment_request.dart';
-import 'package:team_play/feature/home/models/profile_update.dart';
+import 'package:team_play/feature/home/models/profile_update_request.dart';
 import 'package:team_play/feature/home/services/profile.dart';
 import 'package:team_play/feature/shared/models/chat.dart';
 
 final profileSevice = Provider((ref) => ProfileService());
 
-final getUserProfileProvider = FutureProvider.family<UserProfile, String>(
+final getUserProfileProvider =
+    FutureProvider.autoDispose.family<UserProfile, String>(
   (ref, uid) async => await ref.read(profileSevice).getUserProfile(uid),
 );
 
@@ -23,7 +24,7 @@ final getUserProfileMessageProvider =
 );
 
 final profileUpdateProvider =
-    FutureProvider.family<void, Tuple2<String, ProfileUpdate>>(
+    FutureProvider.family<void, Tuple2<String, ProfileUpdateRequest>>(
   (ref, data) async =>
       await ref.read(profileSevice).updateProfile(data.value1, data.value2),
 );

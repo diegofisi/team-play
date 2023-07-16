@@ -35,14 +35,14 @@ class Settings {
 }
 
 List<Settings> buildSettings(BuildContext context) {
-  GoogleSignIn _googleSignIn = GoogleSignIn();
+  GoogleSignIn googleSignIn = GoogleSignIn();
 
   return [
     Settings(
-      title: "Mi Perfil",
+      title: "Preferencias de cuenta",
       icon: Icons.account_circle,
       onTap: () {
-        context.go('/profile');
+        context.go('/account_edit_preferences');
       },
     ),
     Settings(
@@ -72,21 +72,6 @@ List<Settings> buildSettings(BuildContext context) {
                   },
                 ),
               ],
-            );
-          },
-        );
-      },
-    ),
-    Settings(
-      title: "Radio de busqueda",
-      icon: Icons.notifications,
-      onTap: () {
-        showCupertinoDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return CupertinoAlertDialog(
-              title: const Text('Notificaciones'),
-              content: Container(),
             );
           },
         );
@@ -242,8 +227,8 @@ List<Settings> buildSettings(BuildContext context) {
       icon: Icons.logout,
       onTap: () async {
         try {
-          if (await _googleSignIn.isSignedIn()) {
-            await _googleSignIn.disconnect();
+          if (await googleSignIn.isSignedIn()) {
+            await googleSignIn.disconnect();
           }
           await FirebaseAuth.instance.signOut();
           Future.microtask(() => context.go('/login'));
