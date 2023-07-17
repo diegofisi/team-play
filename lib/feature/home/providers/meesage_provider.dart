@@ -6,5 +6,5 @@ final messageSevice = Provider((ref) => MessageService());
 
 final messageSeviceProvider =
     FutureProvider.autoDispose.family<void, MessageRequest>(
-  (ref, message) async => await ref.read(messageSevice).createMessage(message),
+  (ref, message) async => await ref.watch(messageSevice).createMessage(message),
 );

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provider.dart';
 import 'package:team_play/feature/auth/presentation/providers/form_provider.dart';
-import 'package:team_play/feature/home/models/tournament_request.dart';
+import 'package:team_play/feature/home/models/tournament_registration_request.dart';
 import 'package:team_play/feature/home/providers/tournament_provider.dart';
 import 'package:team_play/feature/shared/models/location.dart';
 import 'package:team_play/feature/shared/widgets/form/form.dart';

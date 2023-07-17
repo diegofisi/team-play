@@ -143,16 +143,17 @@ class ProfileScreen extends ConsumerWidget {
                         wordSpacing: 2.0,
                       ),
                     ),
-                  Text(
-                    "${profile.name} estos son tus comentarios",
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                      wordSpacing: 2.0,
+                  if (id == userProfile.id)
+                    Text(
+                      "${profile.name} estos son tus comentarios",
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                        wordSpacing: 2.0,
+                      ),
                     ),
-                  ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.90,
                     child: CommentFormField(

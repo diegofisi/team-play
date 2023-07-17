@@ -15,12 +15,13 @@ class InitialScreen extends ConsumerWidget {
         if (snapshot.connectionState != ConnectionState.done) {
           return const CircularProgressIndicator();
         }
-        if (snapshot.hasData && snapshot.data != null) {
+        if (snapshot.hasData && snapshot.data != null) {         
           return FutureBuilder(
             future: ref
                 .watch(isUserRegisteredProvider.notifier)
                 .checkUserRegistration(),
             builder: (context, registerSnapshot) {
+              
               if (registerSnapshot.connectionState != ConnectionState.done) {
                 return const Center(child: CircularProgressIndicator());
               }

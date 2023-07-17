@@ -12,6 +12,7 @@ import 'package:team_play/feature/home/screens/game_screen.dart';
 import 'package:team_play/feature/home/screens/home_screen.dart';
 import 'package:team_play/feature/home/screens/profile_screen.dart';
 import 'package:team_play/feature/home/screens/tournament_registration.dart';
+import 'package:team_play/feature/home/screens/tournament_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -50,6 +51,13 @@ final appRouter = GoRouter(
           return const LoginScreen();
         }
         return ProfileScreen(id: id);
+      },
+    ),
+    GoRoute(
+      path: '/tournament/:tournamentId',
+      builder: (context, state) {
+        final tournamentId = state.pathParameters['tournamentId'];
+        return TournamentScreen(tournamentId:tournamentId!);
       },
     ),
     GoRoute(

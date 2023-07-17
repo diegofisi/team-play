@@ -11,31 +11,31 @@ final profileSevice = Provider((ref) => ProfileService());
 
 final getUserProfileProvider =
     FutureProvider.autoDispose.family<UserProfile, String>(
-  (ref, uid) async => await ref.read(profileSevice).getUserProfile(uid),
+  (ref, uid) async => await ref.watch(profileSevice).getUserProfile(uid),
 );
 
 final getProfileProvider = FutureProvider.autoDispose.family<Profile, String>(
-  (ref, id) async => await ref.read(profileSevice).getProfile(id),
+  (ref, id) async => await ref.watch(profileSevice).getProfile(id),
 );
 
 final getUserProfileMessageProvider =
     FutureProvider.autoDispose.family<List<Chat>, String>(
-  (ref, uid) async => await ref.read(profileSevice).getUserProfileMessage(uid),
+  (ref, uid) async => await ref.watch(profileSevice).getUserProfileMessage(uid),
 );
 
 final profileUpdateProvider =
     FutureProvider.family<void, Tuple2<String, ProfileUpdateRequest>>(
   (ref, data) async =>
-      await ref.read(profileSevice).updateProfile(data.value1, data.value2),
+      await ref.watch(profileSevice).updateProfile(data.value1, data.value2),
 );
 
 final getUserByIDProvider =
     FutureProvider.autoDispose.family<UserProfile, String>(
-  (ref, id) async => await ref.read(profileSevice).getUserByID(id),
+  (ref, id) async => await ref.watch(profileSevice).getUserByID(id),
 );
 
 final postCommentaryProvider =
     FutureProvider.autoDispose.family<void, Tuple2<String, ComentRequest>>(
   (ref, data) async =>
-      await ref.read(profileSevice).postCommentary(data.value1, data.value2),
+      await ref.watch(profileSevice).postCommentary(data.value1, data.value2),
 );

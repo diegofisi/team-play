@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:team_play/feature/auth/presentation/providers/firebase_uid_provider.dart';
 import 'package:team_play/feature/auth/presentation/providers/user_information_provider.dart';
-import 'package:team_play/feature/home/entities/game.dart';
+import 'package:team_play/feature/home/entities/tournament.dart';
 import 'package:team_play/feature/home/entities/user_profile.dart';
-import 'package:team_play/feature/home/providers/game_register_provider.dart';
 import 'package:team_play/feature/home/providers/profile_provider.dart';
+import 'package:team_play/feature/home/providers/tournament_provider.dart';
 import 'package:team_play/feature/shared/helpers/slider_search.dart';
 import 'package:team_play/feature/shared/widgets/custom_button_search.dart';
 import 'package:team_play/feature/shared/widgets/user_profile_image.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class GamesScreen extends ConsumerWidget {
-  const GamesScreen({super.key});
-  Future<List> initData(BuildContext context, WidgetRef ref) async {
-    final uid = await ref.read(firebaseUIDProvider.notifier).getUid();
-    if (uid == null) {
-      Future.microtask(() => context.go('/login'));
-      return [];
+class MyTournaments extends ConsumerWidget {
+  const MyTournaments({super.key});
+
+    Future<List> initData(BuildContext context, WidgetRef ref) async {
+      final uid = await ref.read(firebaseUIDProvider.notifier).getUid();
+      if (uid == null) {
+        Future.microtask(() => context.go('/login'));
+        return [];
+      }
+      final tournaments = await ref.watch(getTournamentsProvider.future);
+      final userProfile = await ref.watch(getUserProfileProvider(uid).future);
+      return [uid, tournaments, userProfile];
     }
-    final games = await ref.watch(getGamesProvider.future);
-    final userProfile = await ref.watch(getUserProfileProvider(uid).future);
-    return [uid, games, userProfile];
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final size = MediaQuery.of(context).size;
+
     return Center(
       child: SafeArea(
         child: Padding(
@@ -37,10 +38,10 @@ class GamesScreen extends ConsumerWidget {
               const Row(
                 children: [
                   CustomSearch(
-                    heroTag: "buscar_jugador",
-                    title: "Buscar Jugador",
-                    route: '/game_registration',
-                    icon: Icons.person_search,
+                    heroTag: "torneo1",
+                    title: "Crear torneo",
+                    route: 'proximo',
+                    icon: Icons.travel_explore_rounded,
                   ),
                 ],
               ),
@@ -80,7 +81,7 @@ class GamesScreen extends ConsumerWidget {
                             child: Column(
                               children: [
                                 Text(
-                                    "Partidos a ${snapshot1.data.toString()} km de distancia"),
+                                    "Torneos a ${snapshot1.data.toString()} km de distancia"),
                               ],
                             ),
                           ),
@@ -102,59 +103,72 @@ class GamesScreen extends ConsumerWidget {
                     return Text('Error: ${snapshot2.error}');
                   }
                   if (snapshot2.hasData) {
-                    final games = snapshot2.data![1] as List<Game>;
+                    final tournament = snapshot2.data![1] as List<Tournament>;
                     final userProfile = snapshot2.data![2] as UserProfile;
                     return Expanded(
                       child: MasonryGridView.count(
                         crossAxisCount: 2,
                         mainAxisSpacing: 4,
                         crossAxisSpacing: 4,
-                        itemCount: games.length,
+                        itemCount: tournament.length,
                         itemBuilder: (context, index) {
                           return Column(
                             children: [
                               GestureDetector(
                                 onTap: () async {
-                                  final id = games[index].id;
-                                  await ref.read(getGameProvider(id).future);
+                                  final id = tournament[index].id;
+                                  await ref
+                                      .read(getTournamentProvider(id).future);
                                   if (context.mounted) {
                                     Future.microtask(
-                                      () => context.go('/game/$id'),
+                                      () => context.go('/tournament/$id'),
                                     );
                                   }
                                 },
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          games[index].title,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          'Fecha: ${DateFormat('yyyy-MM-dd').format(games[index].matchDate)}',
-                                        ),
-                                        Text("Hora: ${games[index].matchTime}"),
-                                        Text(
-                                            "se requiere: ${games[index].positionNeeded}"),
-                                        Text(
-                                            "alquiler: S./${games[index].fieldRentalPayment}"),
-                                        if (userProfile.id ==
-                                            games[index].createdBy.id)
-                                          const Text(
-                                            "Owner",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
+                                child: SizedBox(
+                                  width: size.width * 0.4,
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              tournament[index].name,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                           ),
-                                      ],
+                                          Text(
+                                            'Fecha: ${tournament[index].date.year}-${tournament[index].date.month}-${tournament[index].date.day}',
+                                          ),
+                                          Text(
+                                            'Time: ${tournament[index].time}',
+                                          ),
+                                          Text(
+                                            "Inscripcion: S./${tournament[index].inscription}",
+                                          ),
+                                          Text(
+                                            "Premio: S./${tournament[index].prize}",
+                                          ),
+                                          Text(
+                                            "Jugadores max: ${tournament[index].teamCount}",
+                                          ),
+                                          if (userProfile.id ==
+                                              tournament[index].createdBy)
+                                            const Text(
+                                              "Owner",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

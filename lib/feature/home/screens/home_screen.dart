@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:team_play/feature/home/providers/boton_navigation_provider.dart';
 import 'package:team_play/feature/home/screens/games_screen.dart';
 import 'package:team_play/feature/home/screens/league_screen.dart';
+import 'package:team_play/feature/home/screens/my_tournaments.dart';
 import 'package:team_play/feature/home/screens/setting_screen.dart';
-import 'package:team_play/feature/home/screens/tournament_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -18,7 +18,7 @@ class HomeScreen extends ConsumerWidget {
         children: const [
           GamesScreen(), // Home screen content
           SettingsScreen(),
-          MyTournamentsScreen(),
+          MyTournaments(),
           LeaguesScreen(),
         ],
       ),
@@ -34,7 +34,7 @@ class HomeScreen extends ConsumerWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.sports_soccer),
-            label: 'Mis Torneos',
+            label: 'Torneos',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.travel_explore_sharp),
@@ -49,5 +49,3 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 }
-
-

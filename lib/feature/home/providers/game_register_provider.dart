@@ -11,15 +11,15 @@ final createGameProvider =
 });
 
 final getGamesProvider = FutureProvider.autoDispose<List<Game>>(
-  (ref) async => await ref.read(gameServiceProvider).getNearGames(),
+  (ref) async => await ref.watch(gameServiceProvider).getNearGames(),
 );
 
 final getGameProvider = FutureProvider.autoDispose.family<Game, String>(
-  (ref, gameId) async => await ref.read(gameServiceProvider).getGame(gameId),
+  (ref, gameId) async => await ref.watch(gameServiceProvider).getGame(gameId),
 );
 
 final deleteGameProvider = FutureProvider.family<void, String>(
-  (ref, gameId) async => await ref.read(gameServiceProvider).deleteGame(gameId),
+  (ref, gameId) async => await ref.watch(gameServiceProvider).deleteGame(gameId),
 );
 
 final registerGameProvider =
