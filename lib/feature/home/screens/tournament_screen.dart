@@ -14,15 +14,19 @@ class TournamentScreen extends ConsumerWidget {
   const TournamentScreen({required this.tournamentId, super.key});
 
   Future<List> initData(BuildContext context, WidgetRef ref) async {
-    final uid = await ref.read(firebaseUIDProvider.notifier).getUid();
-    if (uid == null) {
-      Future.microtask(() => context.go('/login'));
+    try {
+      final uid = await ref.read(firebaseUIDProvider.notifier).getUid();
+      if (uid == null) {
+        Future.microtask(() => context.go('/login'));
+        return [];
+      }
+      final tournament =
+          await ref.watch(getTournamentProvider(tournamentId).future);
+      final userProfile = await ref.watch(getUserProfileProvider(uid).future);
+      return [uid, tournament, userProfile];
+    } catch (e) {
       return [];
     }
-    final tournament =
-        await ref.watch(getTournamentProvider(tournamentId).future);
-    final userProfile = await ref.watch(getUserProfileProvider(uid).future);
-    return [uid, tournament, userProfile];
   }
 
   @override
@@ -67,11 +71,6 @@ class TournamentScreen extends ConsumerWidget {
             centerTitle: true,
             title: Text(
               tournament.name,
-              style: TextStyle(
-                color: Colors.green[800],
-                fontWeight: FontWeight.bold,
-                fontSize: 30,
-              ),
             ),
           ),
           body: Center(
@@ -223,7 +222,7 @@ class TournamentScreen extends ConsumerWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("Eliminar partido: "),
+                        const Text("Eliminar torneo: "),
                         IconButton(
                           onPressed: () async {
                             await ref.read(
@@ -263,7 +262,8 @@ class TournamentScreen extends ConsumerWidget {
                     if (tournament.teamCount > count)
                       ElevatedButton(
                         onPressed: () {
-                          
+                          context.go(
+                              '/tournament_team_registration/$tournamentId');
                         },
                         child: const Text("registrarse"),
                       ),

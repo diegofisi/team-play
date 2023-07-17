@@ -9,6 +9,8 @@ import 'package:team_play/feature/home/models/tournament_response.dart';
 import 'package:team_play/feature/shared/helpers/determine_position.dart';
 import 'package:team_play/feature/shared/helpers/slider_search.dart';
 
+import '../models/tournament_register_request.dart';
+
 class TournamentService {
   final Dio dio = Dio();
 
@@ -83,5 +85,20 @@ class TournamentService {
     dio.options.headers['content-Type'] = 'application/json';
     dio.options.headers['Authorization'] = 'Bearer $token';
     await dio.delete('http://10.0.2.2:3000/api/tournaments/$id');
+  }
+
+  Future<bool> registerTournament(
+      String tournamentID, TournamentRegisterRequest request) async {
+    try {
+      final token = await FirebaseAuth.instance.currentUser!.getIdToken();
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers['Authorization'] = 'Bearer $token';
+      await dio.post(
+          'http://10.0.2.2:3000/api/tournaments/$tournamentID/add-team',
+          data: request.toJson());
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

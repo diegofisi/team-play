@@ -11,6 +11,8 @@ import 'package:team_play/feature/home/screens/game_registration_screen.dart';
 import 'package:team_play/feature/home/screens/game_screen.dart';
 import 'package:team_play/feature/home/screens/home_screen.dart';
 import 'package:team_play/feature/home/screens/profile_screen.dart';
+import 'package:team_play/feature/home/screens/register_team_tournament.dart';
+import 'package:team_play/feature/home/screens/register_tournament.dart';
 import 'package:team_play/feature/home/screens/tournament_registration.dart';
 import 'package:team_play/feature/home/screens/tournament_screen.dart';
 
@@ -57,7 +59,7 @@ final appRouter = GoRouter(
       path: '/tournament/:tournamentId',
       builder: (context, state) {
         final tournamentId = state.pathParameters['tournamentId'];
-        return TournamentScreen(tournamentId:tournamentId!);
+        return TournamentScreen(tournamentId: tournamentId!);
       },
     ),
     GoRoute(
@@ -96,6 +98,27 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/account_edit_preferences',
       builder: (context, state) => const AcountEditPreferences(),
+    ),
+    GoRoute(
+      path: '/tournament_team_registration/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id'];
+        if (id == null || id.isEmpty) {
+          return const ErrorScreen();
+        }
+        return RegisterTeamTournament(tournamentId: id);
+      },
+    ),
+    GoRoute(
+      path: '/tournament_registration_pay/:id/:teamID',
+      builder: (context, state) {
+        final id = state.pathParameters['id'];
+        final teamID = state.pathParameters['teamID'];
+        if (id == null || id.isEmpty || teamID == null || teamID.isEmpty) {
+          return const ErrorScreen();
+        }
+        return RegisterTournament(tournamentId: id, teamID: teamID);
+      },
     ),
   ],
 );

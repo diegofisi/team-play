@@ -233,7 +233,7 @@ List<Settings> buildSettings(BuildContext context) {
           await FirebaseAuth.instance.signOut();
           Future.microtask(() => context.go('/login'));
         } catch (e) {
-          print('Error: $e');
+          return;
         }
       },
     ),

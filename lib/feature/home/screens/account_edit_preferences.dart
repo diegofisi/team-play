@@ -43,6 +43,14 @@ class AcountEditPreferencesState extends ConsumerState<AcountEditPreferences> {
   }
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _userNameController.dispose();
+    _ageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final textStyle = TextStyle(
       fontSize: 20.0,

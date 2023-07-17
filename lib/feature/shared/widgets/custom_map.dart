@@ -25,6 +25,12 @@ class MyMapState extends State<MyMap> {
   }
 
   @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<Position>(
       future: _positionFuture,

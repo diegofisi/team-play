@@ -15,7 +15,8 @@ import 'package:team_play/feature/shared/widgets/user_profile_image.dart';
 class MyTournaments extends ConsumerWidget {
   const MyTournaments({super.key});
 
-    Future<List> initData(BuildContext context, WidgetRef ref) async {
+  Future<List> initData(BuildContext context, WidgetRef ref) async {
+    try {
       final uid = await ref.read(firebaseUIDProvider.notifier).getUid();
       if (uid == null) {
         Future.microtask(() => context.go('/login'));
@@ -24,7 +25,11 @@ class MyTournaments extends ConsumerWidget {
       final tournaments = await ref.watch(getTournamentsProvider.future);
       final userProfile = await ref.watch(getUserProfileProvider(uid).future);
       return [uid, tournaments, userProfile];
+    } catch (e) {
+      return [];
     }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
@@ -148,7 +153,7 @@ class MyTournaments extends ConsumerWidget {
                                             'Fecha: ${tournament[index].date.year}-${tournament[index].date.month}-${tournament[index].date.day}',
                                           ),
                                           Text(
-                                            'Time: ${tournament[index].time}',
+                                            'Hora: ${tournament[index].time}',
                                           ),
                                           Text(
                                             "Inscripcion: S./${tournament[index].inscription}",

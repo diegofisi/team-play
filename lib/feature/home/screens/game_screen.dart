@@ -16,14 +16,18 @@ class GameScreen extends ConsumerWidget {
   const GameScreen(this.gameID, {super.key});
 
   Future<List> initData(BuildContext context, WidgetRef ref) async {
-    final uid = await ref.read(firebaseUIDProvider.notifier).getUid();
-    if (uid == null) {
-      Future.microtask(() => context.go('/login'));
+    try {
+      final uid = await ref.read(firebaseUIDProvider.notifier).getUid();
+      if (uid == null) {
+        Future.microtask(() => context.go('/login'));
+        return [];
+      }
+      final game = await ref.watch(getGameProvider(gameID).future);
+      final userProfile = await ref.watch(getUserProfileProvider(uid).future);
+      return [uid, game, userProfile];
+    } catch (e) {
       return [];
     }
-    final game = await ref.watch(getGameProvider(gameID).future);
-    final userProfile = await ref.watch(getUserProfileProvider(uid).future);
-    return [uid, game, userProfile];
   }
 
   @override

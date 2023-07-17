@@ -16,14 +16,18 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 class GamesScreen extends ConsumerWidget {
   const GamesScreen({super.key});
   Future<List> initData(BuildContext context, WidgetRef ref) async {
-    final uid = await ref.read(firebaseUIDProvider.notifier).getUid();
-    if (uid == null) {
-      Future.microtask(() => context.go('/login'));
+    try {
+      final uid = await ref.read(firebaseUIDProvider.notifier).getUid();
+      if (uid == null) {
+        Future.microtask(() => context.go('/login'));
+        return [];
+      }
+      final games = await ref.watch(getGamesProvider.future);
+      final userProfile = await ref.watch(getUserProfileProvider(uid).future);
+      return [uid, games, userProfile];
+    } catch (e) {
       return [];
     }
-    final games = await ref.watch(getGamesProvider.future);
-    final userProfile = await ref.watch(getUserProfileProvider(uid).future);
-    return [uid, games, userProfile];
   }
 
   @override

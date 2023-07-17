@@ -39,5 +39,14 @@ class AppTheme {
           ),
           unselectedLabelStyle: const TextStyle(),
         ),
+        appBarTheme: AppBarTheme(
+          centerTitle: true,
+          titleTextStyle: TextStyle(
+            color: Colors.green[800],
+            fontWeight: FontWeight.bold,
+            fontSize: 30,
+          ),
+          iconTheme: IconThemeData(color: Colors.green[800]),
+        ),
       );
 }

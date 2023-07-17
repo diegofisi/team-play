@@ -66,7 +66,7 @@ class TournamentRegistrationState
     }
   }
 
-  Future<void> _selectEndTime(BuildContext context) async {
+  Future<void> selectEndTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),

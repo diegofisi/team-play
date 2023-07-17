@@ -23,7 +23,7 @@ class CommentFormField extends ConsumerStatefulWidget {
 
 class CommentFormFieldState extends ConsumerState<CommentFormField> {
   final TextEditingController _controller = TextEditingController();
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   final _formKey = GlobalKey<FormState>();
   int? selectedRating;
