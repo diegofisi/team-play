@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:team_play/config/constants/environment.dart';
 import 'package:team_play/feature/home/entities/game.dart';
 import 'package:team_play/feature/home/models/game_request.dart';
 import 'package:team_play/feature/home/models/game_response.dart';
@@ -17,7 +18,7 @@ class GameService {
       final token = await FirebaseAuth.instance.currentUser!.getIdToken();
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers['Authorization'] = 'Bearer $token';
-      await dio.post('http://10.0.2.2:3000/api/playerSearches/',
+      await dio.post('${Environment.urlApi}/api/playerSearches/',
           data: gameRequest.toJson());
     } catch (e) {
       return;
@@ -33,7 +34,7 @@ class GameService {
       final token = await FirebaseAuth.instance.currentUser!.getIdToken();
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers['Authorization'] = 'Bearer $token';
-      final data = await dio.get('http://10.0.2.2:3000/api/playerSearches/');
+      final data = await dio.get('${Environment.urlApi}/api/playerSearches/');
       final gameResponse = gameResponseFromJson(encoder.convert(data.data));
       final games = gameResponse
           .map((response) => Game.fromGameResponse(response))
@@ -58,7 +59,7 @@ class GameService {
     final token = await FirebaseAuth.instance.currentUser!.getIdToken();
     dio.options.headers['content-Type'] = 'application/json';
     dio.options.headers['Authorization'] = 'Bearer $token';
-    final data = await dio.get('http://10.0.2.2:3000/api/playerSearches/$id');
+    final data = await dio.get('${Environment.urlApi}/api/playerSearches/$id');
     final gameResponse = GameResponse.fromJson(data.data);
     final game = Game.fromGameResponse(gameResponse);
     return game;
@@ -71,7 +72,7 @@ class GameService {
       dio.options.headers['Authorization'] = 'Bearer $token';
       final registerRequest = RegisterRequest(userId: interestedId);
       await dio.post(
-        'http://10.0.2.2:3000/api/playerSearches/$gameID/register',
+        '${Environment.urlApi}/api/playerSearches/$gameID/register',
         data: registerRequest.toJson(),
       );
     } catch (e) {
@@ -83,6 +84,6 @@ class GameService {
     final token = await FirebaseAuth.instance.currentUser!.getIdToken();
     dio.options.headers['content-Type'] = 'application/json';
     dio.options.headers['Authorization'] = 'Bearer $token';
-    await dio.delete('http://10.0.2.2:3000/api/playerSearches/$id');
+    await dio.delete('${Environment.urlApi}/api/playerSearches/$id');
   }
 }

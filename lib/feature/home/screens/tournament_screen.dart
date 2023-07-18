@@ -249,14 +249,22 @@ class TournamentScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    if (tournament.createdBy != userProfile.id)
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text("Ver torneo"),
-                      ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (context.mounted) {
+                          Future.microtask(
+                            () => context
+                                .go('/tournament_branches/$tournamentId'),
+                          );
+                        }
+                      },
+                      child: const Text("Ver torneo"),
+                    ),
                     if (tournament.createdBy == userProfile.id)
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          context.go('/tournament_management/$tournamentId');
+                        },
                         child: const Text("Gestionar Torneo"),
                       ),
                     if (tournament.teamCount > count)

@@ -102,12 +102,12 @@ class RegisterTournamentState extends ConsumerState<RegisterTournament> {
                     ),
                     const SizedBox(height: 10),
                     Image.asset(
-                      'assets/images/qr_image.jpg',
-                      height: 200,
+                      'assets/images/qr_image2.png',
+                      height: 300,
                     ),
                   ],
                 ),
-                const SizedBox(height: 60),
+                const SizedBox(height: 40),
                 Column(
                   children: [
                     _image == null

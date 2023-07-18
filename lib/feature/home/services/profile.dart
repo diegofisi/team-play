@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:team_play/config/constants/environment.dart';
 import 'package:team_play/feature/home/entities/profile.dart';
 import 'package:team_play/feature/home/entities/user_profile.dart';
 import 'package:team_play/feature/home/models/comment_request.dart';
@@ -17,7 +18,7 @@ class ProfileService {
     final token = await auth.currentUser!.getIdToken();
     dio.options.headers['content-Type'] = 'application/json';
     dio.options.headers['Authorization'] = 'Bearer $token';
-    final data = await dio.get('http://10.0.2.2:3000/api/users/$uid');
+    final data = await dio.get('${Environment.urlApi}/api/users/$uid');
     final profileResponse = UserProfileResponse.fromJson(data.data);
     final profile = UserProfile.fromResponse(profileResponse);
     return profile;
@@ -28,7 +29,7 @@ class ProfileService {
     final token = await auth.currentUser!.getIdToken();
     dio.options.headers['content-Type'] = 'application/json';
     dio.options.headers['Authorization'] = 'Bearer $token';
-    final data = await dio.get('http://10.0.2.2:3000/api/users/$uid');
+    final data = await dio.get('${Environment.urlApi}/api/users/$uid');
     final profileResponse = UserProfileResponse.fromJson(data.data);
     final profile = UserProfile.fromResponse(profileResponse);
     return profile.chats;
@@ -39,7 +40,7 @@ class ProfileService {
     final token = await auth.currentUser!.getIdToken();
     dio.options.headers['content-Type'] = 'application/json';
     dio.options.headers['Authorization'] = 'Bearer $token';
-    final data = await dio.get('http://10.0.2.2:3000/api/users/profile/$id');
+    final data = await dio.get('${Environment.urlApi}/api/users/profile/$id');
     final profileResponse = ProfileResponse.fromJson(data.data);
     final profile = Profile.fromResponse(profileResponse);
     return profile;
@@ -51,7 +52,7 @@ class ProfileService {
     dio.options.headers['content-Type'] = 'application/json';
     dio.options.headers['Authorization'] = 'Bearer $token';
     await dio.post(
-      'http://10.0.2.2:3000/api/comments/$id',
+      '${Environment.urlApi}/api/comments/$id',
       data: comment.toJson(),
     );
   }
@@ -61,7 +62,7 @@ class ProfileService {
     final token = await auth.currentUser!.getIdToken();
     dio.options.headers['content-Type'] = 'application/json';
     dio.options.headers['Authorization'] = 'Bearer $token';
-    final data = await dio.get('http://10.0.2.2:3000/api/users/$id');
+    final data = await dio.get('${Environment.urlApi}/api/users/$id');
     final userResponse = UserProfileResponse.fromJson(data.data);
     final user = UserProfile.fromResponse(userResponse);
     return user;
@@ -73,7 +74,7 @@ class ProfileService {
       final token = await auth.currentUser!.getIdToken();
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers['Authorization'] = 'Bearer $token';
-      await dio.put('http://10.0.2.2:3000/api/users/$id', data: profile);
+      await dio.put('${Environment.urlApi}/api/users/$id', data: profile);
     } catch (e) {
       return;
     }
@@ -85,7 +86,7 @@ class ProfileService {
     dio.options.headers['content-Type'] = 'application/json';
     dio.options.headers['Authorization'] = 'Bearer $token';
     await dio.post(
-      'http://10.0.2.2:3000/api/comments/profile/$id',
+      '${Environment.urlApi}/api/comments/profile/$id',
       data: comment.toJson(),
     );
   }

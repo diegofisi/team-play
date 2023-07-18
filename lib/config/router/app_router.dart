@@ -13,6 +13,8 @@ import 'package:team_play/feature/home/screens/home_screen.dart';
 import 'package:team_play/feature/home/screens/profile_screen.dart';
 import 'package:team_play/feature/home/screens/register_team_tournament.dart';
 import 'package:team_play/feature/home/screens/register_tournament.dart';
+import 'package:team_play/feature/home/screens/tournament_branches.dart';
+import 'package:team_play/feature/home/screens/tournament_managment.dart';
 import 'package:team_play/feature/home/screens/tournament_registration.dart';
 import 'package:team_play/feature/home/screens/tournament_screen.dart';
 
@@ -118,6 +120,26 @@ final appRouter = GoRouter(
           return const ErrorScreen();
         }
         return RegisterTournament(tournamentId: id, teamID: teamID);
+      },
+    ),
+    GoRoute(
+      path: '/tournament_branches/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id'];
+        if (id == null || id.isEmpty) {
+          return const ErrorScreen();
+        }
+        return TournamentBranches(tournamentId: id);
+      },
+    ),
+    GoRoute(
+      path: '/tournament_management/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id'];
+        if (id == null || id.isEmpty) {
+          return const ErrorScreen();
+        }
+        return TournamentManager(tournamentId: id);
       },
     ),
   ],

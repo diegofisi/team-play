@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:team_play/config/constants/environment.dart';
 import 'package:team_play/feature/home/models/message_request.dart';
 
 class MessageService {
@@ -10,7 +11,7 @@ class MessageService {
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers['Authorization'] = 'Bearer $token';
       await dio.post(
-        'http://10.0.2.2:3000/api/users/send-message/',
+        '${Environment.urlApi}/api/users/send-message/',
         data: message.toJson(),
       );
     } catch (e) {

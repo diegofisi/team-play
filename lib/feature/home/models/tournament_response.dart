@@ -139,8 +139,8 @@ class Team1Class {
   });
 
   factory Team1Class.fromJson(Map<String, dynamic> json) => Team1Class(
-        id: json["_id"],
-        name: json["name"],
+        id: json["_id"] ?? "",
+        name: json["name"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
