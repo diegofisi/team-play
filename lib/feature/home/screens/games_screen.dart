@@ -49,7 +49,7 @@ class GamesScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 30),
-              Row(
+              Column(
                 children: [
                   const SizedBox(width: 30),
                   Column(
@@ -73,7 +73,7 @@ class GamesScreen extends ConsumerWidget {
                       const Text("Mi Perfil"),
                     ],
                   ),
-                  const Spacer(),
+                  const SizedBox(height: 20),
                   FutureBuilder(
                     future: getRadiusValue(),
                     builder: (BuildContext context, snapshot1) {

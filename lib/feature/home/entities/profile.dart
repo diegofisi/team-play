@@ -20,6 +20,6 @@ class Profile {
       : name = response.name,
         age = response.age,
         position = response.position,
-        rating = response.rating ?? 0,
+        rating = response.rating ?? 0.0,
         comments = response.comments;
 }

@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "774350942563-fiqfc2uiptppm66sqgotlqboev243pan.apps.googleusercontent.com",
+          "client_id": "774350942563-nnrb2nna0qchrudhrurmqg9v2gr8emhl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "app.g2.team_play",
-            "certificate_hash": "1b78e6758e3142a4f60abb4ff3b270dbdc7c9c00"
+            "certificate_hash": "7ca8000756fb139fc9d1e0e799e0a50462ddb5e8"
           }
         },
         {

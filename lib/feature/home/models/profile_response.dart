@@ -28,7 +28,7 @@ class ProfileResponse {
         name: json["name"],
         age: json["age"],
         position: json["position"],
-        rating: json["rating"].toDouble() ?? 0.0,
+        rating: json["rating"]?.toDouble() ?? 0.0,
         comments: List<Comment>.from(
             json["comments"].map((x) => Comment.fromJson(x))),
       );
@@ -37,7 +37,7 @@ class ProfileResponse {
         "name": name,
         "age": age,
         "position": position,
-        "rating": rating,
+        "rating": rating ?? 0.0,
         "comments": List<dynamic>.from(comments.map((x) => x.toJson())),
       };
 }

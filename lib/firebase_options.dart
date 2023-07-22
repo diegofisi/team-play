@@ -66,7 +66,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '774350942563',
     projectId: 'teamplay-2db94',
     storageBucket: 'teamplay-2db94.appspot.com',
-    androidClientId: '774350942563-p9dkobnabk2ptuo715ddq1h4p7cfsugd.apps.googleusercontent.com',
+    androidClientId: '774350942563-l52a9a4blfp1k8ug3m3ib1std3s14ofa.apps.googleusercontent.com',
     iosClientId: '774350942563-7gjed6bnomm3tk8sj7d8uiuiqo49ndki.apps.googleusercontent.com',
     iosBundleId: 'app.g2.teamPlay',
   );
@@ -77,7 +77,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '774350942563',
     projectId: 'teamplay-2db94',
     storageBucket: 'teamplay-2db94.appspot.com',
-    androidClientId: '774350942563-p9dkobnabk2ptuo715ddq1h4p7cfsugd.apps.googleusercontent.com',
+    androidClientId: '774350942563-l52a9a4blfp1k8ug3m3ib1std3s14ofa.apps.googleusercontent.com',
     iosClientId: '774350942563-vdi7bt7s24ncfbvakhgbnhkq1ineaibn.apps.googleusercontent.com',
     iosBundleId: 'app.g2.teamPlay.RunnerTests',
   );

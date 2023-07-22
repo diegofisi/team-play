@@ -74,215 +74,220 @@ class TournamentScreen extends ConsumerWidget {
             ),
           ),
           body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CustomField(
-                  field: tournament.time,
-                  text: "Hora",
-                  size: size,
-                  tournament: tournament,
-                ),
-                const SizedBox(height: 10),
-                CustomField(
-                  field:
-                      '${tournament.date.year}-${tournament.date.month}-${tournament.date.day}',
-                  text: "Fecha",
-                  size: size,
-                  tournament: tournament,
-                ),
-                CustomField(
-                  field: "S./${tournament.inscription}",
-                  text: "Inscripcion",
-                  size: size,
-                  tournament: tournament,
-                ),
-                CustomField(
-                  field: "S./${tournament.prize}",
-                  text: "Premio",
-                  size: size,
-                  tournament: tournament,
-                ),
-                CustomField(
-                  field: tournament.teamCount.toString(),
-                  text: "Jugadores max",
-                  size: size,
-                  tournament: tournament,
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Ubicacion",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.deepPurple,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CustomField(
+                    field: tournament.time,
+                    text: "Hora",
+                    size: size,
+                    tournament: tournament,
                   ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: size.width * 0.8,
-                  height: size.height * 0.25,
-                  child: FlutterMap(
-                    options: MapOptions(
-                      center: LatLng(
-                        tournament.location.latitude,
-                        tournament.location.longitude,
-                      ),
-                      zoom: 14.5,
-                      maxZoom: 18.0,
-                    ),
-                    children: [
-                      TileLayer(
-                        urlTemplate:
-                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        userAgentPackageName: 'com.example.app',
-                      ),
-                      MarkerLayer(
-                        markers: [
-                          Marker(
-                            width: 80.0,
-                            height: 80.0,
-                            point: LatLng(
-                              tournament.location.latitude,
-                              tournament.location.longitude,
-                            ),
-                            builder: (ctx) => const Icon(
-                              Icons.location_on,
-                              color: Colors.red,
-                              size: 40,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                  const SizedBox(height: 10),
+                  CustomField(
+                    field:
+                        '${tournament.date.year}-${tournament.date.month}-${tournament.date.day}',
+                    text: "Fecha",
+                    size: size,
+                    tournament: tournament,
                   ),
-                ),
-
-                if (tournament.createdBy == userProfile.id)
+                  CustomField(
+                    field: "S./${tournament.inscription}",
+                    text: "Inscripcion",
+                    size: size,
+                    tournament: tournament,
+                  ),
+                  CustomField(
+                    field: "S./${tournament.prize}",
+                    text: "Premio",
+                    size: size,
+                    tournament: tournament,
+                  ),
+                  CustomField(
+                    field: tournament.teamCount.toString(),
+                    text: "Jugadores max",
+                    size: size,
+                    tournament: tournament,
+                  ),
+                  const SizedBox(height: 20),
                   const Text(
-                    "eres el creador del torneo",
-                    style: TextStyle(overflow: TextOverflow.clip),
+                    "Ubicacion",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.deepPurple,
+                    ),
                   ),
-                GestureDetector(
-                  onTap: () async {
-                    final id = tournament.createdBy;
-                    Future.delayed(
-                      Duration.zero,
-                      () {
-                        Future.microtask(() => context.go('/profile/$id'));
-                      },
-                    );
-                  },
-                  child: const Column(
-                    children: [
-                      SizedBox(height: 10),
-                      SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage:
-                              AssetImage('assets/images/profile_image.png'),
-                          backgroundColor: Colors.transparent,
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: size.width * 0.8,
+                    height: size.height * 0.25,
+                    child: FlutterMap(
+                      options: MapOptions(
+                        center: LatLng(
+                          tournament.location.latitude,
+                          tournament.location.longitude,
                         ),
+                        zoom: 14.5,
+                        maxZoom: 18.0,
                       ),
-                      SizedBox(height: 10),
-                      Text(
-                        "perfil del creador del torneo",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // if (tournament.createdBy != userProfile.id &&
-                //     tournament.playerInterested == null)
-                //   ElevatedButton(
-                //     onPressed: () async {
-                //       final gameRegister = tuple2(game.id, userProfile.id);
-                //       await ref.read(registerGameProvider(gameRegister).future);
-                //       Future.microtask(
-                //         () => ScaffoldMessenger.of(context).showSnackBar(
-                //           const SnackBar(
-                //             content: Text("Te has registrado al partido"),
-                //           ),
-                //         ),
-                //       );
-                //       Future.microtask(() => context.go('/home/:$uid'));
-                //     },
-                //     child: const Text("Registrarse al partido"),
-                //   ),
-
-                if (tournament.createdBy == userProfile.id)
-                  GestureDetector(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("Eliminar torneo: "),
-                        IconButton(
-                          onPressed: () async {
-                            await ref.read(
-                                deleteTournamentProvider(tournamentId).future);
-                            if (context.mounted) {
-                              Future.microtask(
-                                () =>
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Partido eliminado"),
-                                  ),
-                                ),
-                              );
-                              Future.microtask(
-                                () => context.go('/home/:$uid'),
-                              );
-                            }
-                          },
-                          icon: const Icon(Icons.delete),
+                        TileLayer(
+                          urlTemplate:
+                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          userAgentPackageName: 'com.example.app',
+                        ),
+                        MarkerLayer(
+                          markers: [
+                            Marker(
+                              width: 80.0,
+                              height: 80.0,
+                              point: LatLng(
+                                tournament.location.latitude,
+                                tournament.location.longitude,
+                              ),
+                              builder: (ctx) => const Icon(
+                                Icons.location_on,
+                                color: Colors.red,
+                                size: 40,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (context.mounted) {
-                          Future.microtask(
-                            () => context
-                                .go('/tournament_branches/$tournamentId'),
-                          );
-                        }
-                      },
-                      child: const Text("Ver torneo"),
+
+                  if (tournament.createdBy == userProfile.id)
+                    const Text(
+                      "eres el creador del torneo",
+                      style: TextStyle(overflow: TextOverflow.clip),
                     ),
-                    if (tournament.createdBy == userProfile.id)
-                      ElevatedButton(
-                        onPressed: () {
-                          context.go('/tournament_management/$tournamentId');
+                  GestureDetector(
+                    onTap: () async {
+                      final id = tournament.createdBy;
+                      Future.delayed(
+                        Duration.zero,
+                        () {
+                          Future.microtask(() => context.go('/profile/$id'));
                         },
-                        child: const Text("Gestionar Torneo"),
-                      ),
-                    if (tournament.teamCount > count)
+                      );
+                    },
+                    child: const Column(
+                      children: [
+                        SizedBox(height: 10),
+                        SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundImage:
+                                AssetImage('assets/images/profile_image.png'),
+                            backgroundColor: Colors.transparent,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "perfil del creador del torneo",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // if (tournament.createdBy != userProfile.id &&
+                  //     tournament.playerInterested == null)
+                  //   ElevatedButton(
+                  //     onPressed: () async {
+                  //       final gameRegister = tuple2(game.id, userProfile.id);
+                  //       await ref.read(registerGameProvider(gameRegister).future);
+                  //       Future.microtask(
+                  //         () => ScaffoldMessenger.of(context).showSnackBar(
+                  //           const SnackBar(
+                  //             content: Text("Te has registrado al partido"),
+                  //           ),
+                  //         ),
+                  //       );
+                  //       Future.microtask(() => context.go('/home/:$uid'));
+                  //     },
+                  //     child: const Text("Registrarse al partido"),
+                  //   ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
                       ElevatedButton(
-                        onPressed: () {
-                          context.go(
-                              '/tournament_team_registration/$tournamentId');
+                        onPressed: () async {
+                          if (context.mounted) {
+                            Future.microtask(
+                              () => context
+                                  .go('/tournament_branches/$tournamentId'),
+                            );
+                          }
                         },
-                        child: const Text("registrarse"),
+                        child: const Text("Ver torneo"),
                       ),
-                    if (tournament.teamCount <= count)
-                      const ElevatedButton(
-                        onPressed: null,
-                        child: Text("registrarse"),
+                      if (tournament.createdBy == userProfile.id)
+                        ElevatedButton(
+                          onPressed: () {
+                            context.go('/tournament_management/$tournamentId');
+                          },
+                          child: const Text("Gestionar Torneo"),
+                        ),
+                      if (tournament.teamCount > count)
+                        ElevatedButton(
+                          onPressed: () {
+                            context.go(
+                                '/tournament_team_registration/$tournamentId');
+                          },
+                          child: const Text("registrarse"),
+                        ),
+                      if (tournament.teamCount <= count)
+                        const ElevatedButton(
+                          onPressed: null,
+                          child: Text("registrarse"),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  if (tournament.createdBy == userProfile.id)
+                    GestureDetector(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Eliminar torneo: "),
+                          IconButton(
+                            onPressed: () async {
+                              await ref.read(
+                                  deleteTournamentProvider(tournamentId)
+                                      .future);
+                              if (context.mounted) {
+                                Future.microtask(
+                                  () => ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                      content: Text("Partido eliminado"),
+                                    ),
+                                  ),
+                                );
+                                Future.microtask(
+                                  () => context.go('/home/:$uid'),
+                                );
+                              }
+                            },
+                            icon: const Icon(Icons.delete),
+                          ),
+                        ],
                       ),
-                  ],
-                ),
-              ],
+                    ),
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         );

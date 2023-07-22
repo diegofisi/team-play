@@ -51,9 +51,11 @@ class AuthDatasourceApiImpl extends AuthDataSourceApi {
       final token = await FirebaseAuth.instance.currentUser!.getIdToken();
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers['Authorization'] = 'Bearer $token';
+      print("usuario creado");
       await dio.post('${Environment.urlApi}/api/users/',
           data: userRequest.toJson());
     } catch (e) {
+      print("usuario no creado");
       return;
     }
   }
